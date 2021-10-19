@@ -5,9 +5,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using TodoList.BuisnesProcess;
 using TodoList.DataAccess;
 using TodoList.DataAccess.TodoContext;
+using System.IO;
+using TodoList.Logger;
+using System;
 
 namespace TodoList
 {
@@ -46,7 +50,7 @@ namespace TodoList
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -83,6 +87,10 @@ namespace TodoList
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
             });
+
+            loggerFactory.AddFile(Path.Combine(Directory.GetCurrentDirectory(), "logger.txt"));
+            var logger = loggerFactory.CreateLogger(typeof(FileLogger));
+            logger.LogInformation("App started at {0}, is 64-bit process: {1}", DateTime.Now, Environment.Is64BitProcess);
         }
     }
 }

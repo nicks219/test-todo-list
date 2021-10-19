@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using TodoList.BuisnesProcess;
 using TodoList.DataAccess.DTO;
@@ -37,20 +38,36 @@ namespace TodoList.Controllers
         [HttpPost]
         public bool OnPost()
         {
-            using var scope = _serviceScopeFactory.CreateScope();
-            return new EntityModel(scope).CreateStubs();
+            try
+            {
+                using var scope = _serviceScopeFactory.CreateScope();
+                return new EntityModel(scope).CreateStubs();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "[EntryController: OnPost]");
+                return false;
+            }
         }
 
         [HttpPost("[action]")]
         public bool OnPostCreate([FromBody] EntryEntity model)
         {
-            //if (model.IsModelValid())
-            if (_rules.IsModelValid(model))
+            try
             {
-                using var scope = _serviceScopeFactory.CreateScope();
-                return new EntityModel(scope).CreateEntry(model);
+                //if (model.IsModelValid())
+                if (_rules.IsModelValid(model))
+                {
+                    using var scope = _serviceScopeFactory.CreateScope();
+                    return new EntityModel(scope).CreateEntry(model);
+                }
+                return false;
             }
-            return false;
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "[EntryController: OnPostCreate]");
+                return false;
+            }
         }
     }
 }

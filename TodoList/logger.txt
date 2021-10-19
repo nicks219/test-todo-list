@@ -1,0 +1,6 @@
+19.10.2021 10:59:24   [INFORMATION] [TodoList.Logger.FileLogger]  App started at 10/19/2021 10:59:24, is 64-bit process: True
+19.10.2021 10:59:25   [INFORMATION] [Microsoft.Hosting.Lifetime]  Now listening on: https://localhost:5001
+19.10.2021 10:59:25   [INFORMATION] [Microsoft.Hosting.Lifetime]  Now listening on: http://localhost:5000
+19.10.2021 10:59:25   [INFORMATION] [Microsoft.Hosting.Lifetime]  Application started. Press Ctrl+C to shut down.
+19.10.2021 10:59:25   [INFORMATION] [Microsoft.Hosting.Lifetime]  Hosting environment: Development
+19.10.2021 10:59:25   [INFORMATION] [Microsoft.Hosting.Lifetime]  Content root path: F:\VS\Test\TodoList\TodoList
