@@ -1,15 +1,24 @@
-﻿using TodoList.DataAccess.TodoContext;
+﻿using System.Collections.Generic;
+using TodoList.DataAccess.TodoContext;
 
-namespace TodoList.DataAccess.DTO
+namespace TodoList.BuisnesProcess
 {
-    /// Код полностью дублируется в BuisnesProcess.Rules, пока не знаю как лучше
-    public static class EntryRules
+    public class Rules : IRules
     {
         private static readonly int TITLE_MIN_LENGTH = 5;
         private static readonly int REPORT_MIN_LENGTH = 5;
 
-        /// Entry model validation rules
-        public static bool IsModelValid(this EntryEntity entry)
+        public List<ActionStatus> GetValidActions(UserEntity user, EntryEntity entry)
+        {
+            return new List<ActionStatus>();
+        }
+
+        public List<ProblemStatus> GetValidStatuses(UserEntity user, EntryEntity entry)
+        {
+            return new List<ProblemStatus>();
+        }
+
+        public bool IsModelValid(EntryEntity entry)
         {
             if (string.IsNullOrEmpty(entry.Title) || string.IsNullOrEmpty(entry.Report)) return false;
 

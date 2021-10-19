@@ -18,19 +18,27 @@ export class Entries extends Component {
                 <thead>
                     <tr>
                         <th>Title</th>
-                        <th>Deadline</th>
                         <th>Initiator</th>
                         <th>Executor</th>
+                        <th>Start Date</th>
+                        <th>Deadline</th>
+                        <th>Completion Date</th>
                     </tr>
                 </thead>
                 <tbody>
                     {backlog.map(backlog =>
-                        <tr key={backlog.entryId}>
+                        <><tr key={backlog.entryId}>
                             <td>{backlog.title}</td>
-                            <td>{backlog.deadline}</td>
                             <td>{backlog.initiator.name}</td>
                             <td>{backlog.executor.name}</td>
+                            <td>{backlog.deadline}</td>
+                            <td>{backlog.startDate}</td>
+                            <td>{backlog.completionDate}</td>
                         </tr>
+                            <tr>
+                                <th colSpan="2" scope="row">Description</th>
+                                <td colSpan="3">{backlog.description}</td>
+                            </tr></>
                     )}
                 </tbody>
             </table>

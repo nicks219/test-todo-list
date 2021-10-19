@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Threading.Tasks;
+using TodoList.BuisnesProcess;
 
 namespace TodoList.DataAccess.TodoContext
 {
@@ -22,7 +22,7 @@ namespace TodoList.DataAccess.TodoContext
 
         public string Report { get; set; }
 
-        public TaskStatus TaskStatus { get; set; }
+        public ProblemStatus TaskStatus { get; set; }
 
         public DateTime StartDate { get; set; }
 

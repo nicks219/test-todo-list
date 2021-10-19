@@ -1,9 +1,10 @@
 ﻿namespace TodoList.BuisnesProcess
 {
-    public enum TaskStatus
+    /// Имя TaskStatus конфликтует с Threading
+    public enum ProblemStatus
     {
         NEW,
-        ON_THE_GO,
+        IN_PROGRESS,
         COMPLITED,
         CLOSED,
         CANCELLED,

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
+using TodoList.BuisnesProcess;
 using TodoList.DataAccess.DTO;
 using TodoList.DataAccess.TodoContext;
 using TodoList.Models;
@@ -15,19 +16,21 @@ namespace TodoList.Controllers
         /// логгирование пока не подключено
         private readonly ILogger<EntryController> _logger;
         private readonly IServiceScopeFactory _serviceScopeFactory;
+        private readonly IRules _rules;
 
-        public EntryController(ILogger<EntryController> logger, IServiceScopeFactory serviceScopeFactory)
+        public EntryController(ILogger<EntryController> logger, IServiceScopeFactory serviceScopeFactory, IRules rules)
         {
             _logger = logger;
             _serviceScopeFactory = serviceScopeFactory;
+            _rules = rules;
         }
 
         [HttpGet]
-        public ActionResult<List<EntryEntity>> OnGet()
+        public ActionResult<List<EntryDto>> OnGet()
         {
             using var scope = _serviceScopeFactory.CreateScope();
             var result = new EntityModel(scope).GetEntries();
-            return result;
+            return EntryDto.ConvertToDto(result);
         }
 
         /// Creates stubs
@@ -41,7 +44,8 @@ namespace TodoList.Controllers
         [HttpPost("[action]")]
         public bool OnPostCreate([FromBody] EntryEntity model)
         {
-            if (model.IsValid())
+            //if (model.IsModelValid())
+            if (_rules.IsModelValid(model))
             {
                 using var scope = _serviceScopeFactory.CreateScope();
                 return new EntityModel(scope).CreateEntry(model);

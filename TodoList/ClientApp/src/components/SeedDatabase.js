@@ -27,7 +27,7 @@ export class SeedDatabase extends Component {
 
                 <p aria-live="polite">Seeding: <strong>{this.state.flag}</strong></p>
 
-                <button className="btn btn-primary" onClick={this.incrementCounter}>Increment</button>
+                <button className="btn btn-primary" onClick={this.incrementCounter}>Seed</button>
             </div>
         );
     }
