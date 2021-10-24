@@ -6,20 +6,31 @@ namespace TodoList.DataAccess.TodoContext
     {
         private static bool _recreate;
 
+        /// не сработает - Repository не получит контекст
+        //static TodoContext()
+        //{
+        //    var a = new TodoContext();
+        //    a.Database.EnsureDeleted();
+        //    a.Database.EnsureCreated();
+        //}
+        //public TodoContext() { }
+
         public TodoContext(DbContextOptions<TodoContext> options) : base(options)
         {
             // TODO: сделать нормальное создание бд
-            if (!_recreate)
-            {
-                var onDelete = Database.EnsureDeleted();
-                var onCreate = Database.EnsureCreated();
-                _recreate = true;
-            }
+            if (_recreate) return;
+            //var onDelete = Database.EnsureDeleted();
+            //var onCreate = Database.EnsureCreated();
+            _recreate = true;
         }
 
         public DbSet<UserEntity> Users { get; set; }
 
         public DbSet<EntryEntity> Entries { get; set; }
+
+        public DbSet<UserStatusEntity> UserStatus { get; set; }
+
+        public DbSet<ProblemStatusEntity> ProblemStatus { get; set; }
 
         /// Many-to-many на данный момент не нужно, но понадобится в дальнейшем
         //public DbSet<UserEntryEntity> UsersEntries { get; set; }
@@ -31,6 +42,12 @@ namespace TodoList.DataAccess.TodoContext
 
             modelBuilder.Entity<EntryEntity>()
                 .HasKey(k => k.EntryId);
+
+            modelBuilder.Entity<UserStatusEntity>()
+                .HasKey(k => k.UserStatusId);
+
+            modelBuilder.Entity<ProblemStatusEntity>()
+                .HasKey(k => k.ProblemStatusId);
 
             /// Many-to-many на данный момент не нужно, но понадобится в дальнейшем
             //modelBuilder.Entity<UserEntryEntity>()

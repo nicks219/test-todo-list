@@ -1,4 +1,6 @@
 ﻿using System;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using TodoList.BuisnesProcess;
 using TodoList.DataAccess.TodoContext;
 
 namespace TodoList.DataAccess.DTO
@@ -15,24 +17,55 @@ namespace TodoList.DataAccess.DTO
 
         public static bool CreateStubs(this IRepository repo)
         {
-            var result1 = repo.CreateUser(new UserEntity() { Name = "John", UserStatus = BuisnesProcess.UserStatus.INITIATOR });
-            var result2 = repo.CreateUser(new UserEntity() { Name = "Slame", UserStatus = BuisnesProcess.UserStatus.EXECUTOR });
+            // должно создаваться один раз
+            foreach (var status in Enum.GetNames(typeof(UserStatus)))
+            {
+                var us = (UserStatus)Enum.Parse(typeof(UserStatus), status);
+                //repo.CreateUserStatus(new UserStatusEntity()
+                repo.Create(new UserStatusEntity()
+                { UserStatusName = status });
+            }
+            foreach (var status in Enum.GetNames(typeof(ProblemStatus)))
+            {
+                var ps = (ProblemStatus)Enum.Parse(typeof(ProblemStatus), status);
+                //repo.CreateProblemStatus(new ProblemStatusEntity()
+                repo.Create(new ProblemStatusEntity()
+                { ProblemStatusName = status });
+            }
+
+            //var result1 = repo.CreateUser(new UserEntity()
+            var result1 = repo.Create(new UserEntity()
+            {
+                Name = "John", UserStatus = repo.GetUserStatus(UserStatus.INITIATOR)
+            });
+            //var result2 = repo.CreateUser(new UserEntity()
+            var result2 = repo.Create(new UserEntity()
+            {
+                Name = "Slame", UserStatus = repo.GetUserStatus(UserStatus.EXECUTOR)
+            });
             var user1 = repo.GetUser(1);
             var user2 = repo.GetUser(2);
-
-            var date = DateTime.Now;
-            var entry = new EntryEntity()
+            var status1 = repo.GetProblemStatus(ProblemStatus.CLOSED);
+            
+            //repo.CreateEntry(entry);
+            int count = 1;
+            while (count-- != 0)
             {
-                Initiator = user1,
-                Executor = user2,
-                Deadline = date,
-                CompletionDate = date,
-                StartDate = date,
-                Title = "First Task",
-                Description = lorenIpsum
-            };
-            repo.CreateEntry(entry);
-            return result1 + result2 == 2;
+                var date = DateTime.Now;
+                var entry1 = new EntryEntity()
+                {
+                    Initiator = user1,
+                    Executor = user2,
+                    Deadline = date,
+                    CompletionDate = date,
+                    StartDate = date,
+                    Title = "Next Task",
+                    Description = lorenIpsum,
+                    TaskStatus = status1
+                };
+                repo.Create(entry1);
+            }
+            return result1 + result2 >= 2;
         }
     }
 }

@@ -3,7 +3,7 @@ using TodoList.BuisnesProcess;
 
 namespace TodoList.DataAccess.TodoContext
 {
-    public class EntryEntity
+    public class EntryEntity : IEntity
     {
         public int EntryId { get; set; }
 
@@ -22,7 +22,7 @@ namespace TodoList.DataAccess.TodoContext
 
         public string Report { get; set; }
 
-        public ProblemStatus TaskStatus { get; set; }
+        public ProblemStatusEntity TaskStatus { get; set; }
 
         public DateTime StartDate { get; set; }
 

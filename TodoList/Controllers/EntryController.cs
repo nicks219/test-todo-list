@@ -27,16 +27,24 @@ namespace TodoList.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<EntryDto>> OnGet()
+        public ActionResult<List<EntryDto>> OnGetAll()
         {
             using var scope = _serviceScopeFactory.CreateScope();
-            var result = new EntityModel(scope).GetEntries();
+            var result = new EntityModel(scope).GetAllEntries();
             return EntryDto.ConvertToDto(result);
+        }
+
+        [HttpGet("[action]")]
+        public ActionResult<List<EntryDto>> OnGetPage(int page = 0)
+        {
+            using var scope = _serviceScopeFactory.CreateScope();
+            var result = new EntityModel(scope).GetEntriesPage(page, out page);
+            return EntryDto.ConvertToDto(result, page);
         }
 
         /// Creates stubs
         [HttpPost]
-        public bool OnPost()
+        public bool OnPostCreateStub()
         {
             try
             {
