@@ -8,14 +8,6 @@ namespace TodoList.DataAccess
     // закомментированные методы не удаляю, возможно пригодятся
     public interface IRepository : IAsyncDisposable, IDisposable
     {
-        IQueryable<EntryEntity> GetAllEntries();
-
-        //IQueryable<EntryEntity> FindByStatus(ProblemStatus problemStatus);
-
-        //IQueryable<EntryEntity> FindByUser(int userId);
-
-        IQueryable<EntryEntity> GetEntriesPage(int currentPage, int pageSize);
-
         EntryEntity GetEntry(int id);
 
         UserEntity GetUser(int id);
@@ -24,16 +16,21 @@ namespace TodoList.DataAccess
 
         ProblemStatusEntity GetProblemStatus(ProblemStatus problemStatus);
 
-        //int CreateEntry(EntryEntity entry);
+        // GetAll~ кандидат на "общий" метод с IEntity
+        //IQueryable<EntryEntity> GetAllEntries();
 
-        //int CreateUser(UserEntity user);
+        IQueryable<ProblemStatusEntity> GetAllProblemStatuses();
 
-        //int CreateUserStatus(UserStatusEntity user);
+        IQueryable<EntryEntity> GetEntries(int currentPage, int pageSize);
 
-        //int CreateProblemStatus(ProblemStatusEntity problemStatus);
+        IQueryable<EntryEntity> GetEntries(int currentPage, int pageSize, int filter);
 
         int Create(IEntity entity);
 
+        int Update(EntryEntity entry);
+
         int GetEntriesCount();
+
+        bool StatusExist();
     }
 }

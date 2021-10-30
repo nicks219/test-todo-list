@@ -18,57 +18,71 @@ namespace TodoList.DataAccess
             _context = serviceProvider.GetRequiredService<TodoContext.TodoContext>();
         }
 
-        public IQueryable<EntryEntity> GetAllEntries()
-        {
-            var result = _context
-                .Entries
-                .Include(e => e.Initiator.UserStatus)
-                .Include(e => e.Executor.UserStatus)
-                .Include(p => p.TaskStatus)
-                .AsNoTracking();
-            return result;
-        }
-
-        //public IQueryable<EntryEntity> FindByStatus(ProblemStatus problemStatus)
+        //public IQueryable<EntryEntity> GetAllEntries()
         //{
         //    var result = _context
         //        .Entries
         //        .Include(e => e.Initiator.UserStatus)
         //        .Include(e => e.Executor.UserStatus)
         //        .Include(p => p.TaskStatus)
-        //        .Where(p => p.TaskStatus.ProblemStatusId == (int)problemStatus)
         //        .AsNoTracking();
         //    return result;
         //}
 
-        //public IQueryable<EntryEntity> FindByUser(int userId)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        public IQueryable<EntryEntity> GetEntriesPage(int currentPage, int pageSize)
+        public IQueryable<EntryEntity> GetEntries(int currentPage, int pageSize)
         {
             var result = _context
                 .Entries
                 .Include(e => e.Initiator.UserStatus)
                 .Include(e => e.Executor.UserStatus)
                 .Include(p => p.TaskStatus)
-                .OrderBy(e => e.Title)///   TODO: должен быть заменяемым
-                .Where(e => true)     ///   TODO: должен быть заменяемым
+                /// TODO: должен быть заменяемым
+                .OrderBy(e => e.Title)
+                /// TODO: должен быть заменяемым
+                //.Where(e => true)     
                 .Skip(currentPage * pageSize)
                 .Take(pageSize)
                 .AsNoTracking();
+            /// TODO: можно работать с LINQ а не с SQL
             return result;
-        }
-
-        public UserEntity GetUser(int id)
-        {
-            return _context.Users.Find(id);
         }
 
         public EntryEntity GetEntry(int id)
         {
-            return _context.Entries.Find(id);
+            return _context
+                .Entries
+                //.Find(id)
+                .Include(e => e.Initiator.UserStatus)
+                .Include(e => e.Executor.UserStatus)
+                .Include(p => p.TaskStatus)
+                .Where(e => e.EntryId == id)
+                .First();
+        }
+
+        public IQueryable<EntryEntity> GetEntries(int currentPage, int pageSize, int filter)
+        {
+            var result = _context
+                .Entries
+                .Include(e => e.Initiator.UserStatus)
+                .Include(e => e.Executor.UserStatus)
+                .Include(p => p.TaskStatus)
+                /// TODO: должен быть заменяемым
+                .OrderBy(e => e.Title)
+                /// TODO: должен быть заменяемым
+                .Where(e => e.TaskStatus.ProblemStatusId == filter)     
+                .Skip(currentPage * pageSize)
+                .Take(pageSize)
+                .AsNoTracking();
+            /// TODO: можно работать с LINQ а не с SQL
+            return result;
+        }
+
+        Func<EntryEntity, bool> predicate = (e) => { return true; };
+        Func<EntryEntity, String> keySelector = (e) => { return e.Title; };
+
+        public UserEntity GetUser(int id)
+        {
+            return _context.Users.Find(id);
         }
 
         public UserStatusEntity GetUserStatus(UserStatus userStatus)
@@ -81,36 +95,10 @@ namespace TodoList.DataAccess
             return _context.ProblemStatus.Find((int)problemStatus);
         }
 
-        //public int CreateEntry(EntryEntity entry)
-        //{
-        //    _context.Entries.Add(entry);
-        //    var result = _context.SaveChanges();
-        //    return result;
-        //}
-
-        //public int CreateUser(UserEntity user)
-        //{
-        //    _context.Users.Add(user);
-        //    var result = _context.SaveChanges();
-        //    return result;
-        //}
-
-        //public int CreateUserStatus(UserStatusEntity userStatus)
-        //{
-        //    _context.UserStatus.Add(userStatus);
-        //    var result = _context.SaveChanges();
-        //    return result;
-        //}
-
-        //public int CreateProblemStatus(ProblemStatusEntity problemStatus)
-        //{
-        //    //String typeName = problemStatus.GetType().FullName;
-        //    //Type entityType = Type.GetType(typeName);
-
-        //    _context.ProblemStatus.Add(problemStatus);
-        //    var result = _context.SaveChanges();
-        //    return result;
-        //}
+        public bool StatusExist()
+        {
+            return _context.Set<UserStatusEntity>().Count() != 0;
+        }
 
         public int Create(IEntity entity)
         {
@@ -122,8 +110,8 @@ namespace TodoList.DataAccess
                 case "EntryEntity":
                     _context.Entries.Add((EntryEntity)entity);
                     break;
-                case "UserStatusEntity":
-                    _context.UserStatus.Add((UserStatusEntity)entity);
+                case "UserStatusEntity":                  
+                    _context.UserStatus.Add((UserStatusEntity)entity);                                       
                     break;
                 case "ProblemStatusEntity":
                     _context.ProblemStatus.Add((ProblemStatusEntity)entity);
@@ -149,6 +137,20 @@ namespace TodoList.DataAccess
         public int GetEntriesCount()
         {
             return _context.Entries.Count();
+        }
+
+        public int Update(EntryEntity entry)
+        {
+            _context.Entries.Update(entry);
+            var result = _context.SaveChanges();
+            return result;
+        }
+
+        public IQueryable<ProblemStatusEntity> GetAllProblemStatuses()
+        {
+            return _context.ProblemStatus
+                .Select(s => s)
+                .AsNoTracking();
         }
     }
 }

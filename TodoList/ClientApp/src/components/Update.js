@@ -1,20 +1,18 @@
-import React, { Component } from 'react';
+п»їimport React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
-export class ReadEntries extends Component {
-    static displayName = ReadEntries.name;
-    page = 0;
-    problemStatuses = { a: '1' };
-    filter = 6;
+export class Update extends Component {
+    static displayName = Update.name;
+    //page = 0;
 
     constructor(props) {
         super(props);
-        this.state = { backlog: [], problemStatuses: [], loading: true };
+        this.state = { backlog: [], loading: true };
+        this.id = props.location.propsState;
+        console.log(this.id);
     }
 
     componentDidMount() {
-        this.getProblemStatus();
-        //console.log(this.state.problemStatuses);
         this.getEntriesData();
     }
 
@@ -25,12 +23,6 @@ export class ReadEntries extends Component {
 
     forw = () => {
         this.page++;
-        this.getEntriesData();
-    }
-
-    select = (e) => {
-        //id в бд начинаются от единицы
-        this.filter = Number(e.target.value) + 1;
         this.getEntriesData();
     }
 
@@ -45,6 +37,7 @@ export class ReadEntries extends Component {
     }
 
     renderBacklogTable(backlog) {
+        
         return (
             <table className='table table-striped' aria-labelledby="tabelLabel">
                 <thead>
@@ -58,17 +51,6 @@ export class ReadEntries extends Component {
                         <th>
                             <Link to='/seed-db' className="btn btn-info">RET</Link>
                         </th>
-                        <th>
-                            <select onChange={this.select} >
-                                {this.state.problemStatuses.map((a, i) =>
-                                    <option value={i} key={i.toString()}>
-                                        {a.problemStatusName}
-                                    </option>
-                                )}
-                                {/*{ console.log(this.state.problemStatuses) }*/}
-                                {/*{console.log(backlog)}*/}
-                            </select>
-                        </th>
                     </tr>
                     <tr>
                         <th>Title</th>
@@ -80,10 +62,10 @@ export class ReadEntries extends Component {
                     </tr>
                 </thead>
                 <tbody>
-                    {backlog.map(backlog =>
+                     
                         <React.Fragment key={backlog.entryId}>
                             <tr style={{ backgroundColor: this.checkVailidity(backlog) == true ? "white" : "red" }}>
-                                <td><Link to={{ pathname: '/update', propsState: backlog.entryId }}>{backlog.title}</Link></td>
+                                <td><Link to='/seed-db'>{backlog.title}</Link></td>
                                 <td>{backlog.initiator.name}</td>
                                 <td>{backlog.executor.name}</td>
                                 <td>{backlog.deadline}</td>
@@ -97,29 +79,20 @@ export class ReadEntries extends Component {
                                 </td>
                             </tr>
                         </React.Fragment>
-                    )}
-
-
+                     
                 </tbody>
             </table>
         );
     }
 
     inputText = (e) => {
-        // get number of element property 'id':
         var id = Number(e.target.id);
 
         const newText = e.target.value;
-        // на экране массив json'ов, а не один json
         const data = [{ description: newText, initiator: { name: '' }, executor: { name: '' }, entryId: '1' }];
         this.setState({ backlog: data });
     }
 
-    // display: 'none' display: ''
-    //style = {{
-    //                ...styles.productOptions,
-    //    backgroundColor: checkedButton === item.id ? "grey" : "white",
-    //              }}
     render() {
         let contents = this.state.loading
             ? <p><em>Please wait...</em></p>
@@ -135,15 +108,9 @@ export class ReadEntries extends Component {
     }
 
     async getEntriesData() {
-        const response = await fetch('entry/ongetpage?page=' + this.page + "&filter=" + this.filter);
+        const response = await fetch('entry/ongetentry?id=' + this.id);
         const data = await response.json();
-        if (data != null && data.length > 0) this.page = data[0].currentPage;
+        //if (data != null) this.page = data[0].currentPage;
         this.setState({ backlog: data, loading: false });
-    }
-
-    async getProblemStatus() {
-        const response = await fetch('entry/ongetproblemstatuses');
-        const data = await response.json();
-        this.setState({ problemStatuses: data });
     }
 }

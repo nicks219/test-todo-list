@@ -52,11 +52,26 @@ namespace TodoList.DataAccess.DTO
             CurrentPage = currentPage;
         }
 
+        public EntryDto(String message)
+        {
+            Title = message;
+        }
+
         public static List<EntryDto> ConvertToDto(List<EntryEntity> entries, int currentPage = 0)
         {
             return entries
                 .Select(e => new EntryDto(e, currentPage))
                 .ToList();
+        }
+
+        public static EntryDto ConvertToDto(EntryEntity entry, int currentPage = 0)
+        {
+            return new EntryDto(entry, currentPage);
+        }
+
+        public static List<EntryDto> Error(String message)
+        {
+            return new List<EntryDto> { new EntryDto(message) };
         }
     }
 }

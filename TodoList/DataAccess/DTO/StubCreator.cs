@@ -18,19 +18,22 @@ namespace TodoList.DataAccess.DTO
         public static bool CreateStubs(this IRepository repo)
         {
             // должно создаваться один раз
-            foreach (var status in Enum.GetNames(typeof(UserStatus)))
+            if (!repo.StatusExist())
             {
-                var us = (UserStatus)Enum.Parse(typeof(UserStatus), status);
-                //repo.CreateUserStatus(new UserStatusEntity()
-                repo.Create(new UserStatusEntity()
-                { UserStatusName = status });
-            }
-            foreach (var status in Enum.GetNames(typeof(ProblemStatus)))
-            {
-                var ps = (ProblemStatus)Enum.Parse(typeof(ProblemStatus), status);
-                //repo.CreateProblemStatus(new ProblemStatusEntity()
-                repo.Create(new ProblemStatusEntity()
-                { ProblemStatusName = status });
+                foreach (var status in Enum.GetNames(typeof(UserStatus)))
+                {
+                    var us = (UserStatus)Enum.Parse(typeof(UserStatus), status);
+                    //repo.CreateUserStatus(new UserStatusEntity()
+                    repo.Create(new UserStatusEntity()
+                    { UserStatusName = status });
+                }
+                foreach (var status in Enum.GetNames(typeof(ProblemStatus)))
+                {
+                    var ps = (ProblemStatus)Enum.Parse(typeof(ProblemStatus), status);
+                    //repo.CreateProblemStatus(new ProblemStatusEntity()
+                    repo.Create(new ProblemStatusEntity()
+                    { ProblemStatusName = status });
+                }
             }
 
             //var result1 = repo.CreateUser(new UserEntity()
@@ -48,7 +51,7 @@ namespace TodoList.DataAccess.DTO
             var status1 = repo.GetProblemStatus(ProblemStatus.CLOSED);
             
             //repo.CreateEntry(entry);
-            int count = 1;
+            int count = 5;
             while (count-- != 0)
             {
                 var date = DateTime.Now;

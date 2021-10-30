@@ -1,7 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TodoList.BuisnesProcess;
 using TodoList.DataAccess;
 using TodoList.DataAccess.DTO;
 using TodoList.DataAccess.TodoContext;
@@ -12,6 +14,7 @@ namespace TodoList.Models
     {
         private const int PageSize = 3;
         private const int MinPage = 0;
+        private const int NoFilter = 6;
         private readonly IServiceScope _serviceScope;
 
         public EntityModel(IServiceScope serviceScope)
@@ -19,14 +22,14 @@ namespace TodoList.Models
             _serviceScope = serviceScope;
         }
 
-        public List<EntryEntity> GetAllEntries()
+        public EntryEntity GetEntry(int id)
         {
             using var repo = _serviceScope.ServiceProvider.GetRequiredService<IRepository>();
-            var result = repo.GetAllEntries().ToList();
+            var result = repo.GetEntry(id);
             return result;
         }
 
-        public List<EntryEntity> GetEntriesPage(int currentPage, out int correctedPage)
+        public List<EntryEntity> GetEntries(int currentPage, int filter, out int correctedPage)
         {
             using var repo = _serviceScope.ServiceProvider.GetRequiredService<IRepository>();
             int entriesCount = repo.GetEntriesCount();
@@ -47,12 +50,22 @@ namespace TodoList.Models
                 currentPage = MinPage;
             }
 
-            var result = repo.GetEntriesPage(currentPage, PageSize).ToList();
+            var result = new List<EntryEntity>();
+
+            if (filter == NoFilter)
+            {
+                result = repo.GetEntries(currentPage, PageSize).ToList();
+            }
+            else
+            {
+                result = repo.GetEntries(currentPage, PageSize, filter).ToList();
+            }
+
             correctedPage = currentPage;
             return result;
         }
 
-        public bool CreateStubs()
+        public bool CreateStub()
         {
             using var repo = _serviceScope.ServiceProvider.GetRequiredService<IRepository>();
             return repo.CreateStubs();
@@ -62,6 +75,19 @@ namespace TodoList.Models
         {
             using var repo = _serviceScope.ServiceProvider.GetRequiredService<IRepository>();
             var result = repo.Create(entry);
+            return result != 0;
+        }
+
+        internal List<ProblemStatusEntity> GetProblemStatuses()
+        {
+            using var repo = _serviceScope.ServiceProvider.GetRequiredService<IRepository>();
+            return repo.GetAllProblemStatuses().ToList();
+        }
+
+        internal bool UpdateEntry(EntryEntity entry)
+        {
+            using var repo = _serviceScope.ServiceProvider.GetRequiredService<IRepository>();
+            var result = repo.Update(entry);
             return result != 0;
         }
     }

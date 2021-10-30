@@ -3,6 +3,8 @@ import { Route } from 'react-router';
 import { Layout } from './components/Layout';
 import { ReadEntries } from './components/ReadEntries';
 import { SeedDatabase } from './components/SeedDatabase';
+import { Create } from './components/Create';
+import { Update } from './components/Update';
 
 import './custom.css'
 
@@ -13,8 +15,9 @@ export default class App extends Component {
         return (
             <Layout>
                 <Route exact path='/' component={ReadEntries} />
+                <Route path='/update' component={Update} />
                 <Route path='/seed-db' component={SeedDatabase} />
-                <Route path='/get-entries' component={ReadEntries} />
+                <Route path='/get-entries' component={Create} />
             </Layout>
         );
     }

@@ -1,9 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace TodoList.DataAccess.TodoContext
 {
     public class TodoContext : DbContext
     {
+        // EFCore SQL scalar function
+        [DbFunction("ufnGetStock", "dbo")]
+        public static int Abc(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         private static bool _recreate;
 
         /// не сработает - Repository не получит контекст
@@ -21,6 +29,10 @@ namespace TodoList.DataAccess.TodoContext
             if (_recreate) return;
             //var onDelete = Database.EnsureDeleted();
             //var onCreate = Database.EnsureCreated();
+            //if (!(onDelete && onCreate))
+            //{
+            //    throw new NotImplementedException("DB Create Error");
+            //}
             _recreate = true;
         }
 
