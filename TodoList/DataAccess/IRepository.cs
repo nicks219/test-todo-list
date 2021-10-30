@@ -5,7 +5,6 @@ using TodoList.DataAccess.TodoContext;
 
 namespace TodoList.DataAccess
 {
-    // закомментированные методы не удаляю, возможно пригодятся
     public interface IRepository : IAsyncDisposable, IDisposable
     {
         EntryEntity GetEntry(int id);
@@ -15,9 +14,6 @@ namespace TodoList.DataAccess
         UserStatusEntity GetUserStatus(UserStatus userStatus);
 
         ProblemStatusEntity GetProblemStatus(ProblemStatus problemStatus);
-
-        // GetAll~ кандидат на "общий" метод с IEntity
-        //IQueryable<EntryEntity> GetAllEntries();
 
         IQueryable<ProblemStatusEntity> GetAllProblemStatuses();
 

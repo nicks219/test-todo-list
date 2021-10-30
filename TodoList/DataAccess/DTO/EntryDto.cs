@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TodoList.BuisnesProcess;
 using TodoList.DataAccess.TodoContext;
 using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace TodoList.DataAccess.DTO
 {
@@ -14,6 +15,7 @@ namespace TodoList.DataAccess.DTO
         public List<ActionStatus> ValidActions { get; set; }
 
         /// Поля EntryEntity
+        //[JsonPropertyName("entryId")]
         public int EntryId { get; set; }
 
         public string Title { get; set; }
@@ -52,9 +54,33 @@ namespace TodoList.DataAccess.DTO
             CurrentPage = currentPage;
         }
 
+        [JsonConstructor]
+        public EntryDto()
+        {
+            Console.Write("!");
+        }
+
         public EntryDto(String message)
         {
             Title = message;
+        }
+
+        internal static EntryEntity ConvertFromDto(EntryDto model)
+        {
+            EntryEntity entryEntity = new EntryEntity();
+
+            var a = "!";
+            entryEntity.CompletionDate = model.CompletionDate;
+            entryEntity.Deadline = model.Deadline;
+            entryEntity.Description = model.Description + a;
+            entryEntity.EntryId = model.EntryId;
+            entryEntity.Executor = model.Executor;
+            entryEntity.Initiator = model.Initiator;
+            entryEntity.Report = model.Report + a;
+            entryEntity.StartDate = model.StartDate;
+            entryEntity.TaskStatus = model.TaskStatus;
+            entryEntity.Title = model.Title + a;
+            return entryEntity;
         }
 
         public static List<EntryDto> ConvertToDto(List<EntryEntity> entries, int currentPage = 0)

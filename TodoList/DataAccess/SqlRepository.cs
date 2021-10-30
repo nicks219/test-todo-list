@@ -12,22 +12,13 @@ namespace TodoList.DataAccess
     public class SqlRepository : IRepository
     {
         private readonly TodoContext.TodoContext _context;
+        private Func<EntryEntity, bool> predicate = (e) => { return true; };
+        private Func<EntryEntity, int> keySelector = (e) => { return e.EntryId; };
 
         public SqlRepository(IServiceProvider serviceProvider)
         {
             _context = serviceProvider.GetRequiredService<TodoContext.TodoContext>();
         }
-
-        //public IQueryable<EntryEntity> GetAllEntries()
-        //{
-        //    var result = _context
-        //        .Entries
-        //        .Include(e => e.Initiator.UserStatus)
-        //        .Include(e => e.Executor.UserStatus)
-        //        .Include(p => p.TaskStatus)
-        //        .AsNoTracking();
-        //    return result;
-        //}
 
         public IQueryable<EntryEntity> GetEntries(int currentPage, int pageSize)
         {
@@ -36,22 +27,21 @@ namespace TodoList.DataAccess
                 .Include(e => e.Initiator.UserStatus)
                 .Include(e => e.Executor.UserStatus)
                 .Include(p => p.TaskStatus)
-                /// TODO: должен быть заменяемым
-                .OrderBy(e => e.Title)
-                /// TODO: должен быть заменяемым
-                //.Where(e => true)     
+                .ToList();
+             
+            var linqWork = result
+                .OrderBy(e => keySelector(e))
+                .Where(e => predicate(e))     
                 .Skip(currentPage * pageSize)
                 .Take(pageSize)
-                .AsNoTracking();
-            /// TODO: можно работать с LINQ а не с SQL
-            return result;
+                .AsQueryable();
+            return linqWork;
         }
 
         public EntryEntity GetEntry(int id)
         {
             return _context
                 .Entries
-                //.Find(id)
                 .Include(e => e.Initiator.UserStatus)
                 .Include(e => e.Executor.UserStatus)
                 .Include(p => p.TaskStatus)
@@ -59,26 +49,26 @@ namespace TodoList.DataAccess
                 .First();
         }
 
-        public IQueryable<EntryEntity> GetEntries(int currentPage, int pageSize, int filter)
+        public IQueryable<EntryEntity> GetEntries(int currentPage, int pageSize, int problemStatusFilter)
         {
             var result = _context
                 .Entries
                 .Include(e => e.Initiator.UserStatus)
                 .Include(e => e.Executor.UserStatus)
                 .Include(p => p.TaskStatus)
-                /// TODO: должен быть заменяемым
-                .OrderBy(e => e.Title)
-                /// TODO: должен быть заменяемым
-                .Where(e => e.TaskStatus.ProblemStatusId == filter)     
+                .ToList();
+
+            predicate = (e) => { return e.TaskStatus.ProblemStatusId == problemStatusFilter; };
+             
+            var linqWork = result
+                .OrderBy(e => keySelector(e))
+                .Where(e => predicate(e))   
                 .Skip(currentPage * pageSize)
                 .Take(pageSize)
-                .AsNoTracking();
-            /// TODO: можно работать с LINQ а не с SQL
-            return result;
-        }
+                .AsQueryable();
 
-        Func<EntryEntity, bool> predicate = (e) => { return true; };
-        Func<EntryEntity, String> keySelector = (e) => { return e.Title; };
+            return linqWork;
+        }
 
         public UserEntity GetUser(int id)
         {

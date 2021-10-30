@@ -96,17 +96,22 @@ namespace TodoList.Controllers
         }
 
         [HttpPut]
-        public bool? OnPutUpdate([FromBody] EntryEntity model)
+        public ActionResult<EntryDto> OnPutUpdate([FromBody] EntryDto dto)
         {
             try
             {
+                EntryEntity model = EntryDto.ConvertFromDto(dto);
                 //if (model.IsModelValid())
-                if (_rules.IsModelValid(model))
-                {
-                    using var scope = _serviceScopeFactory.CreateScope();
-                    return new EntityModel(scope).UpdateEntry(model);
-                }
-                return false;
+                //if (_rules.IsModelValid(model))
+                //{
+                using var scope = _serviceScopeFactory.CreateScope();
+                var result = new EntityModel(scope).UpdateEntry(model);
+
+                //var result2 = new EntityModel(scope).GetEntry(result);
+                return EntryDto.ConvertToDto(result);
+                //return true;
+                //}
+                //return false;
             }
             catch (Exception ex)
             {

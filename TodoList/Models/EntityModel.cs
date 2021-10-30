@@ -33,7 +33,7 @@ namespace TodoList.Models
         {
             using var repo = _serviceScope.ServiceProvider.GetRequiredService<IRepository>();
             int entriesCount = repo.GetEntriesCount();
-            
+
             // TODO вынеси в одтельный метод
             int MaxPage = Math.DivRem(entriesCount, PageSize, out int remainder);
             if (remainder > 0)
@@ -84,11 +84,13 @@ namespace TodoList.Models
             return repo.GetAllProblemStatuses().ToList();
         }
 
-        internal bool UpdateEntry(EntryEntity entry)
+        internal EntryEntity UpdateEntry(EntryEntity entry)
         {
             using var repo = _serviceScope.ServiceProvider.GetRequiredService<IRepository>();
-            var result = repo.Update(entry);
-            return result != 0;
+            var result2 = repo.Update(entry);
+
+            var result = repo.GetEntry(entry.EntryId);
+            return result; // != 0
         }
     }
 }

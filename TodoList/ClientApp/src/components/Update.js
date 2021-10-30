@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 export class Update extends Component {
     static displayName = Update.name;
     //page = 0;
+    id = 0;
 
     constructor(props) {
         super(props);
@@ -16,14 +17,8 @@ export class Update extends Component {
         this.getEntriesData();
     }
 
-    back = () => {
-        this.page--;
-        this.getEntriesData();
-    }
-
-    forw = () => {
-        this.page++;
-        this.getEntriesData();
+    update = () => {
+        this.putEntriesData();
     }
 
     expired = {
@@ -37,19 +32,13 @@ export class Update extends Component {
     }
 
     renderBacklogTable(backlog) {
-        
+
         return (
             <table className='table table-striped' aria-labelledby="tabelLabel">
                 <thead>
                     <tr key={"button"}>
                         <th>
-                            <button onClick={this.back} className="btn btn-info">&lt;BACK</button>
-                        </th>
-                        <th>
-                            <button onClick={this.forw} className="btn btn-info">FORW&gt;</button>
-                        </th>
-                        <th>
-                            <Link to='/seed-db' className="btn btn-info">RET</Link>
+                            <button onClick={this.update} className="btn btn-info">UPDT</button>
                         </th>
                     </tr>
                     <tr>
@@ -62,24 +51,25 @@ export class Update extends Component {
                     </tr>
                 </thead>
                 <tbody>
-                     
-                        <React.Fragment key={backlog.entryId}>
-                            <tr style={{ backgroundColor: this.checkVailidity(backlog) == true ? "white" : "red" }}>
-                                <td><Link to='/seed-db'>{backlog.title}</Link></td>
-                                <td>{backlog.initiator.name}</td>
-                                <td>{backlog.executor.name}</td>
-                                <td>{backlog.deadline}</td>
-                                <td>{backlog.startDate}</td>
-                                <td>{backlog.completionDate}</td>
-                            </tr>
-                            <tr>
-                                <th colSpan="2" scope="row">Description</th>
-                                <td colSpan="3" style={{ display: '' }}>
-                                    <textarea id={backlog.entryId} value={backlog.description} cols={66} rows={8} onChange={this.inputText} />
-                                </td>
-                            </tr>
-                        </React.Fragment>
-                     
+
+                    <React.Fragment key={backlog.entryId}>
+                        <tr style={{ backgroundColor: this.checkVailidity(backlog) == true ? "white" : "red" }}>
+                            {/*<td><Link to='/seed-db'>{backlog.title}</Link></td>*/}
+                            <td>{backlog.title}</td>
+                            <td>{backlog.initiator.name}</td>
+                            <td>{backlog.executor.name}</td>
+                            <td>{backlog.deadline}</td>
+                            <td>{backlog.startDate}</td>
+                            <td>{backlog.completionDate}</td>
+                        </tr>
+                        <tr>
+                            <th colSpan="2" scope="row">Description</th>
+                            <td colSpan="3" style={{ display: '' }}>
+                                <textarea id={backlog.entryId} value={backlog.description} cols={66} rows={8} onChange={this.inputText} />
+                            </td>
+                        </tr>
+                    </React.Fragment>
+
                 </tbody>
             </table>
         );
@@ -112,5 +102,19 @@ export class Update extends Component {
         const data = await response.json();
         //if (data != null) this.page = data[0].currentPage;
         this.setState({ backlog: data, loading: false });
+    }
+
+    async putEntriesData() {
+        var item = { EntryId: 1 };
+        var requestBody = JSON.stringify(item);
+        requestBody = { "EntryId": 1 };
+        requestBody = JSON.stringify(this.state.backlog);
+
+        const response = await fetch('entry',
+            { method: "PUT", headers: { 'Content-Type': "application/json;charset=utf-8" }, body: requestBody });
+        const data = await response.json();
+        //if (data != null) this.page = data[0].currentPage;
+        this.setState({ backlog: data, loading: false });
+        //this.id = data;
     }
 }
