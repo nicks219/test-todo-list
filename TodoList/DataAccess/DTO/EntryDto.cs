@@ -15,7 +15,6 @@ namespace TodoList.DataAccess.DTO
         public List<ActionStatus> ValidActions { get; set; }
 
         /// Поля EntryEntity
-        //[JsonPropertyName("entryId")]
         public int EntryId { get; set; }
 
         public string Title { get; set; }
@@ -54,6 +53,7 @@ namespace TodoList.DataAccess.DTO
             CurrentPage = currentPage;
         }
 
+        // Необходим для десериализации
         [JsonConstructor]
         public EntryDto()
         {
@@ -68,8 +68,9 @@ namespace TodoList.DataAccess.DTO
         internal static EntryEntity ConvertFromDto(EntryDto model)
         {
             EntryEntity entryEntity = new EntryEntity();
-
-            var a = "!";
+            
+            // тестовый уостыль: убери
+            var a = String.Empty;
             entryEntity.CompletionDate = model.CompletionDate;
             entryEntity.Deadline = model.Deadline;
             entryEntity.Description = model.Description + a;

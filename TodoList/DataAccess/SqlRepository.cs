@@ -28,7 +28,11 @@ namespace TodoList.DataAccess
                 .Include(e => e.Executor.UserStatus)
                 .Include(p => p.TaskStatus)
                 .ToList();
-             
+
+            // TODO: позже надо сделать их настройку
+            predicate = (e) => { return true; };
+            keySelector = (e) => { return e.EntryId; };
+
             var linqWork = result
                 .OrderBy(e => keySelector(e))
                 .Where(e => predicate(e))     
@@ -45,8 +49,8 @@ namespace TodoList.DataAccess
                 .Include(e => e.Initiator.UserStatus)
                 .Include(e => e.Executor.UserStatus)
                 .Include(p => p.TaskStatus)
-                .Where(e => e.EntryId == id)
-                .First();
+                //.Where(e => e.EntryId == id)
+                .FirstOrDefault(e => e.EntryId == id);
         }
 
         public IQueryable<EntryEntity> GetEntries(int currentPage, int pageSize, int problemStatusFilter)
@@ -58,6 +62,8 @@ namespace TodoList.DataAccess
                 .Include(p => p.TaskStatus)
                 .ToList();
 
+            // TODO: позже надо сделать их настройку
+            keySelector = (e) => { return e.EntryId; };
             predicate = (e) => { return e.TaskStatus.ProblemStatusId == problemStatusFilter; };
              
             var linqWork = result
@@ -132,6 +138,7 @@ namespace TodoList.DataAccess
         public int Update(EntryEntity entry)
         {
             _context.Entries.Update(entry);
+
             var result = _context.SaveChanges();
             return result;
         }

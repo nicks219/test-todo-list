@@ -34,24 +34,26 @@ namespace TodoList.DataAccess.DTO
                     repo.Create(new ProblemStatusEntity()
                     { ProblemStatusName = status });
                 }
+                //var result1 = repo.CreateUser(new UserEntity()
+                var result1 = repo.Create(new UserEntity()
+                {
+                    Name = "John",
+                    UserStatus = repo.GetUserStatus(UserStatus.INITIATOR)
+                });
+                //var result2 = repo.CreateUser(new UserEntity()
+                var result2 = repo.Create(new UserEntity()
+                {
+                    Name = "Slame",
+                    UserStatus = repo.GetUserStatus(UserStatus.EXECUTOR)
+                });
             }
-
-            //var result1 = repo.CreateUser(new UserEntity()
-            var result1 = repo.Create(new UserEntity()
-            {
-                Name = "John", UserStatus = repo.GetUserStatus(UserStatus.INITIATOR)
-            });
-            //var result2 = repo.CreateUser(new UserEntity()
-            var result2 = repo.Create(new UserEntity()
-            {
-                Name = "Slame", UserStatus = repo.GetUserStatus(UserStatus.EXECUTOR)
-            });
+            
             var user1 = repo.GetUser(1);
             var user2 = repo.GetUser(2);
             var status1 = repo.GetProblemStatus(ProblemStatus.CLOSED);
             
             //repo.CreateEntry(entry);
-            int count = 5;
+            int count = 2;
             while (count-- != 0)
             {
                 var date = DateTime.Now;
@@ -68,7 +70,7 @@ namespace TodoList.DataAccess.DTO
                 };
                 repo.Create(entry1);
             }
-            return result1 + result2 >= 2;
+            return user1 != null && user2 != null;
         }
     }
 }

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 export class ReadEntries extends Component {
     static displayName = ReadEntries.name;
     page = 0;
-    problemStatuses = { a: '1' };
+    // костыль: 6 - отсутствие фильтрации на бэке
     filter = 6;
 
     constructor(props) {
@@ -14,7 +14,6 @@ export class ReadEntries extends Component {
 
     componentDidMount() {
         this.getProblemStatus();
-        //console.log(this.state.problemStatuses);
         this.getEntriesData();
     }
 
@@ -39,8 +38,6 @@ export class ReadEntries extends Component {
     }
 
     checkVailidity = (backlog) => {
-        //backlog.deadline
-        //backlog.taskStatus.problemStatusName
         return false;
     }
 
@@ -56,17 +53,12 @@ export class ReadEntries extends Component {
                             <button onClick={this.forw} className="btn btn-info">FORW&gt;</button>
                         </th>
                         <th>
-                            <Link to='/seed-db' className="btn btn-info">RET</Link>
-                        </th>
-                        <th>
                             <select onChange={this.select} >
                                 {this.state.problemStatuses.map((a, i) =>
                                     <option value={i} key={i.toString()}>
                                         {a.problemStatusName}
                                     </option>
                                 )}
-                                {/*{ console.log(this.state.problemStatuses) }*/}
-                                {/*{console.log(backlog)}*/}
                             </select>
                         </th>
                     </tr>
@@ -83,7 +75,7 @@ export class ReadEntries extends Component {
                     {backlog.map(backlog =>
                         <React.Fragment key={backlog.entryId}>
                             <tr style={{ backgroundColor: this.checkVailidity(backlog) == true ? "white" : "red" }}>
-                                <td><Link to={{ pathname: '/update', propsState: backlog.entryId }}>{backlog.title}</Link></td>
+                                <td>{backlog.title}</td>
                                 <td>{backlog.initiator.name}</td>
                                 <td>{backlog.executor.name}</td>
                                 <td>{backlog.deadline}</td>
@@ -93,7 +85,12 @@ export class ReadEntries extends Component {
                             <tr>
                                 <th colSpan="2" scope="row">Description</th>
                                 <td colSpan="3" style={{ display: '' }}>
-                                    <textarea id={backlog.entryId} value={backlog.description} cols={66} rows={8} onChange={this.inputText} />
+                                    {backlog.description}
+                                </td>
+                                <td>
+                                    <Link to={{ pathname: '/update', propsState: backlog.entryId, fromReadComponent: this.page }}>
+                                        <button className="btn btn-info">UPDT</button>
+                                    </Link>
                                 </td>
                             </tr>
                         </React.Fragment>
@@ -103,16 +100,6 @@ export class ReadEntries extends Component {
                 </tbody>
             </table>
         );
-    }
-
-    inputText = (e) => {
-        // get number of element property 'id':
-        var id = Number(e.target.id);
-
-        const newText = e.target.value;
-        // на экране массив json'ов, а не один json
-        const data = [{ description: newText, initiator: { name: '' }, executor: { name: '' }, entryId: '1' }];
-        this.setState({ backlog: data });
     }
 
     // display: 'none' display: ''
@@ -135,8 +122,15 @@ export class ReadEntries extends Component {
     }
 
     async getEntriesData() {
+        if (this.props.location.fromUpdateComponent != undefined) {
+            this.page = this.props.location.fromUpdateComponent;
+            this.props.location.fromUpdateComponent = undefined;
+            console.log("from update");
+        }
+
         const response = await fetch('entry/ongetpage?page=' + this.page + "&filter=" + this.filter);
         const data = await response.json();
+        
         if (data != null && data.length > 0) this.page = data[0].currentPage;
         this.setState({ backlog: data, loading: false });
     }

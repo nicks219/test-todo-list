@@ -24,6 +24,11 @@ namespace TodoList.Models
 
         public EntryEntity GetEntry(int id)
         {
+            // костыль: сделай проверку входных данных, при невалидном id бд ничего не выдаёт
+            if (id == 0) 
+            { 
+                id = 1; 
+            }
             using var repo = _serviceScope.ServiceProvider.GetRequiredService<IRepository>();
             var result = repo.GetEntry(id);
             return result;
@@ -84,12 +89,21 @@ namespace TodoList.Models
             return repo.GetAllProblemStatuses().ToList();
         }
 
-        internal EntryEntity UpdateEntry(EntryEntity entry)
+        internal EntryEntity UpdateEntry(EntryDto dto)
         {
+            // TODO: ты обновляешь все связанные таблицы (dbo.ProblemStatus)
+            // потому приходится вставлять в них new сущности (стр.99) и менять в них поля
+            // TODO: обновляй только то, что необходимо (dbo.Entries)
             using var repo = _serviceScope.ServiceProvider.GetRequiredService<IRepository>();
-            var result2 = repo.Update(entry);
 
-            var result = repo.GetEntry(entry.EntryId);
+            var taskStatus = repo.GetProblemStatus((ProblemStatus)dto.TaskStatus.ProblemStatusId);
+            dto.TaskStatus = taskStatus;
+
+            EntryEntity model = EntryDto.ConvertFromDto(dto);
+
+            var result2 = repo.Update(model);
+
+            var result = repo.GetEntry(model.EntryId);
             return result; // != 0
         }
     }

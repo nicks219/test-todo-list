@@ -12,28 +12,8 @@ namespace TodoList.DataAccess.TodoContext
             throw new NotImplementedException();
         }
 
-        private static bool _recreate;
-
-        /// не сработает - Repository не получит контекст
-        //static TodoContext()
-        //{
-        //    var a = new TodoContext();
-        //    a.Database.EnsureDeleted();
-        //    a.Database.EnsureCreated();
-        //}
-        //public TodoContext() { }
-
         public TodoContext(DbContextOptions<TodoContext> options) : base(options)
         {
-            // TODO: сделать нормальное создание бд
-            if (_recreate) return;
-            //var onDelete = Database.EnsureDeleted();
-            //var onCreate = Database.EnsureCreated();
-            //if (!(onDelete && onCreate))
-            //{
-            //    throw new NotImplementedException("DB Create Error");
-            //}
-            _recreate = true;
         }
 
         public DbSet<UserEntity> Users { get; set; }

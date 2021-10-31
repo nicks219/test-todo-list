@@ -53,7 +53,6 @@ namespace TodoList.Controllers
         [HttpGet("[action]")]
         public ActionResult<List<ProblemStatusDto>> OnGetProblemStatuses()
         {
-            //return new List<ProblemStatusDto>();
             using var scope = _serviceScopeFactory.CreateScope();
             var result = new EntityModel(scope).GetProblemStatuses();
             return ProblemStatusDto.ConvertToDto(result);
@@ -80,7 +79,6 @@ namespace TodoList.Controllers
         {
             try
             {
-                //if (model.IsModelValid())
                 if (_rules.IsModelValid(model))
                 {
                     using var scope = _serviceScopeFactory.CreateScope();
@@ -100,18 +98,10 @@ namespace TodoList.Controllers
         {
             try
             {
-                EntryEntity model = EntryDto.ConvertFromDto(dto);
-                //if (model.IsModelValid())
-                //if (_rules.IsModelValid(model))
-                //{
                 using var scope = _serviceScopeFactory.CreateScope();
-                var result = new EntityModel(scope).UpdateEntry(model);
+                var result = new EntityModel(scope).UpdateEntry(dto);
 
-                //var result2 = new EntityModel(scope).GetEntry(result);
                 return EntryDto.ConvertToDto(result);
-                //return true;
-                //}
-                //return false;
             }
             catch (Exception ex)
             {

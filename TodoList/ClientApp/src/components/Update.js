@@ -1,19 +1,24 @@
-﻿import React, { Component } from 'react';
+﻿import { data } from 'jquery';
+import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
 export class Update extends Component {
     static displayName = Update.name;
-    //page = 0;
     id = 0;
+    page = 0;
 
     constructor(props) {
         super(props);
-        this.state = { backlog: [], loading: true };
-        this.id = props.location.propsState;
-        console.log(this.id);
+        this.state = { backlog: [], problemStatuses: [], loading: true };
+        // костыль: при "обновлении" будет загружена первая запись, но хотя бы не "отвалится"
+        if (props.location.fromReadComponent != undefined) {
+            this.id = props.location.propsState;
+            this.page = props.location.fromReadComponent;
+        }
     }
 
     componentDidMount() {
+        this.getProblemStatus();
         this.getEntriesData();
     }
 
@@ -21,13 +26,19 @@ export class Update extends Component {
         this.putEntriesData();
     }
 
+    select = (e) => {
+
+        const data = this.state.backlog;
+        const status = Number(e.target.value) + 1;
+        data.taskStatus.problemStatusId = status;
+        this.setState({ backlog: data });
+    }
+
     expired = {
         backgroundColor: "#FF0000"
     }
 
     checkVailidity = (backlog) => {
-        //backlog.deadline
-        //backlog.taskStatus.problemStatusName
         return false;
     }
 
@@ -40,6 +51,11 @@ export class Update extends Component {
                         <th>
                             <button onClick={this.update} className="btn btn-info">UPDT</button>
                         </th>
+                        <th>
+                            <Link to={{ pathname: '/', fromUpdateComponent: this.page }}>
+                                <button className="btn btn-info">RTRN</button>
+                            </Link>
+                        </th>
                     </tr>
                     <tr>
                         <th>Title</th>
@@ -48,24 +64,33 @@ export class Update extends Component {
                         <th>Start Date</th>
                         <th>Deadline</th>
                         <th>Completion Date</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
 
                     <React.Fragment key={backlog.entryId}>
                         <tr style={{ backgroundColor: this.checkVailidity(backlog) == true ? "white" : "red" }}>
-                            {/*<td><Link to='/seed-db'>{backlog.title}</Link></td>*/}
                             <td>{backlog.title}</td>
                             <td>{backlog.initiator.name}</td>
                             <td>{backlog.executor.name}</td>
                             <td>{backlog.deadline}</td>
                             <td>{backlog.startDate}</td>
                             <td>{backlog.completionDate}</td>
+                            <td>
+                                <select onChange={this.select} value={Number(backlog.taskStatus.problemStatusId - 1)}>
+                                    {this.state.problemStatuses.map((a, i) =>
+                                        <option value={i} key={i.toString()}>
+                                            {a.problemStatusName}
+                                        </option>
+                                    )}
+                                </select>
+                            </td>
                         </tr>
                         <tr>
                             <th colSpan="2" scope="row">Description</th>
                             <td colSpan="3" style={{ display: '' }}>
-                                <textarea id={backlog.entryId} value={backlog.description} cols={66} rows={8} onChange={this.inputText} />
+                                <textarea id={8} value={backlog.description} cols={66} rows={8} onChange={this.inputText} />
                             </td>
                         </tr>
                     </React.Fragment>
@@ -76,10 +101,9 @@ export class Update extends Component {
     }
 
     inputText = (e) => {
-        var id = Number(e.target.id);
-
         const newText = e.target.value;
-        const data = [{ description: newText, initiator: { name: '' }, executor: { name: '' }, entryId: '1' }];
+        const data = this.state.backlog;
+        data.description = newText;
         this.setState({ backlog: data });
     }
 
@@ -100,7 +124,6 @@ export class Update extends Component {
     async getEntriesData() {
         const response = await fetch('entry/ongetentry?id=' + this.id);
         const data = await response.json();
-        //if (data != null) this.page = data[0].currentPage;
         this.setState({ backlog: data, loading: false });
     }
 
@@ -113,8 +136,12 @@ export class Update extends Component {
         const response = await fetch('entry',
             { method: "PUT", headers: { 'Content-Type': "application/json;charset=utf-8" }, body: requestBody });
         const data = await response.json();
-        //if (data != null) this.page = data[0].currentPage;
         this.setState({ backlog: data, loading: false });
-        //this.id = data;
+    }
+
+    async getProblemStatus() {
+        const response = await fetch('entry/ongetproblemstatuses');
+        const data = await response.json();
+        this.setState({ problemStatuses: data });
     }
 }
