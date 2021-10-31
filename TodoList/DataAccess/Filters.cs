@@ -6,36 +6,36 @@ using TodoList.DataAccess.TodoContext;
 
 namespace TodoList.DataAccess
 {
-    public class Filters<T>
+    public class Filters
     {
-        //public Func<EntryEntity, bool> predicate;
-        //public Func<EntryEntity, int> keySelector;
-        //public delegate bool pr (EntryEntity en);
-        //public delegate int ks(EntryEntity en);
+        private Func<EntryEntity, bool> predicate;
+        private Func<EntryEntity, int> keySelector;
 
-        public T lambda;
-
-        public Filters(T lambda)
+        public Filters() 
         {
-            this.lambda  = lambda;
+            // правила фильтрации по умолчанию
+            predicate = (e) => { return true; };
+            keySelector = (e) => { return e.EntryId; };
         }
 
-        public Filters() { }
-
-        public T Get()
+        public void SetPredicate(Func<EntryEntity, bool> predicate)
         {
-            return lambda;
+            this.predicate = predicate;
         }
 
-        public T Get(T lambda)
+        public Func<EntryEntity, bool> GetPredicate()
         {
-            this.lambda = lambda;
-            return lambda;
+            return predicate;
         }
 
-        public void Set(T lambda)
+        public void SetKeySelector(Func<EntryEntity, int> keySelector)
         {
-            this.lambda = lambda;
+            this.keySelector = keySelector;
+        }
+
+        public Func<EntryEntity, int> GetKeySelector()
+        {
+            return keySelector;
         }
     }
 }

@@ -54,7 +54,7 @@ export class ReadEntries extends Component {
                             <button onClick={this.forw} className="btn btn-info">FORW&gt;</button>
                         </th>
                         <th>
-                            <select onChange={this.select} >
+                            <select onChange={this.select} value={ Number(this.filter - 1) }>
                                 {this.state.problemStatuses.map((a, i) =>
                                     <option value={i} key={i.toString()}>
                                         {a.problemStatusName}
@@ -97,7 +97,6 @@ export class ReadEntries extends Component {
                         </React.Fragment>
                     )}
 
-
                 </tbody>
             </table>
         );
@@ -125,8 +124,8 @@ export class ReadEntries extends Component {
     async getEntriesData() {
         if (this.props.location.fromUpdateComponent != undefined) {
             this.page = this.props.location.fromUpdateComponent;
+            this.filter = this.props.location.filter;
             this.props.location.fromUpdateComponent = undefined;
-            console.log("from update");
         }
 
         const response = await fetch('entry/ongetpage?page=' + this.page + "&filter=" + this.filter);

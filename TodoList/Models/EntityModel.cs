@@ -25,9 +25,9 @@ namespace TodoList.Models
         public EntryEntity GetEntry(int id)
         {
             // костыль: сделай проверку входных данных, при невалидном id бд ничего не выдаёт
-            if (id == 0) 
-            { 
-                id = 1; 
+            if (id == 0)
+            {
+                id = 1;
             }
             using var repo = _serviceScope.ServiceProvider.GetRequiredService<IRepository>();
             var result = repo.GetEntry(id);
@@ -36,43 +36,19 @@ namespace TodoList.Models
 
         public List<EntryEntity> GetEntries(int currentPage, int filter, out int correctedPage)
         {
+            Filters filters = new();
+            if (filter != NoFilter)
+            {
+                filters.SetPredicate((e) => { return e.TaskStatus.ProblemStatusId == filter; });
+            }
+
             using var repo = _serviceScope.ServiceProvider.GetRequiredService<IRepository>();
-            int entriesCount = 0;
-            if (filter == NoFilter)
-            {
-                entriesCount = repo.GetEntriesCount();
-            }
-            else
-            {
-                entriesCount = repo.GetEntriesCount(filter);
-            }
 
-            // TODO вынеси в одтельный метод
-            int MaxPage = Math.DivRem(entriesCount, PageSize, out int remainder);
-            if (remainder > 0)
-            {
-                MaxPage++;
-            }
-            if (currentPage >= MaxPage)
-            {
-                currentPage = --MaxPage;
-            }
+            repo.SetFilters(filters);
 
-            if (currentPage < MinPage)
-            {
-                currentPage = MinPage;
-            }
+            currentPage = FixPageNumber(currentPage, repo.GetEntriesCount());
 
-            var result = new List<EntryEntity>();
-
-            if (filter == NoFilter)
-            {
-                result = repo.GetEntries(currentPage, PageSize).ToList();
-            }
-            else
-            {
-                result = repo.GetEntries(currentPage, PageSize, filter).ToList();
-            }
+            var result = repo.GetEntries(currentPage, PageSize).ToList();
 
             correctedPage = currentPage;
             return result;
@@ -113,6 +89,27 @@ namespace TodoList.Models
 
             var result = repo.GetEntry(model.EntryId);
             return result; // != 0
+        }
+
+        private static int FixPageNumber(int currentPage, int entriesCount)
+        {
+            int MaxPage = Math.DivRem(entriesCount, PageSize, out int remainder);
+            if (remainder > 0)
+            {
+                MaxPage++;
+            }
+
+            if (currentPage >= MaxPage)
+            {
+                currentPage = --MaxPage;
+            }
+
+            if (currentPage < MinPage)
+            {
+                currentPage = MinPage;
+            }
+
+            return currentPage;
         }
     }
 }

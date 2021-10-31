@@ -6,6 +6,7 @@ export class Update extends Component {
     static displayName = Update.name;
     id = 0;
     page = 0;
+    filter = 0;
 
     constructor(props) {
         super(props);
@@ -52,7 +53,9 @@ export class Update extends Component {
                             <button onClick={this.update} className="btn btn-info">UPDT</button>
                         </th>
                         <th>
-                            <Link to={{ pathname: '/', fromUpdateComponent: this.page }}>
+                            <Link to={{
+                                pathname: '/', fromUpdateComponent: this.page,
+                                filter: this.state.backlog.taskStatus.problemStatusId }}>
                                 <button className="btn btn-info">RTRN</button>
                             </Link>
                         </th>

@@ -19,16 +19,16 @@ namespace TodoList.DataAccess
 
         IQueryable<EntryEntity> GetEntries(int currentPage, int pageSize);
 
-        IQueryable<EntryEntity> GetEntries(int currentPage, int pageSize, int filter);
-
         int Create(IEntity entity);
 
         int Update(EntryEntity entry);
 
         int GetEntriesCount();
 
-        int GetEntriesCount(int filter);
-
         bool StatusExist();
+
+        void SetFilters(Filters filters);
+
+
     }
 }

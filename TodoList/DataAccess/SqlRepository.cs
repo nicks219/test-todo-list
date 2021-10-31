@@ -9,39 +9,41 @@ using TodoList.DataAccess.TodoContext;
 namespace TodoList.DataAccess
 {
     // закомментированные методы не удаляю, возможно пригодятся
+    // TODO: c filtered страницы на фронты некорректно возвращается после update-> rtrn
     public class SqlRepository : IRepository
     {
         private readonly TodoContext.TodoContext _context;
-        private Func<EntryEntity, bool> predicate;// = (e) => { return true; };
-        private Func<EntryEntity, int> keySelector;// = (e) => { return e.EntryId; };
-
-        private readonly Filters<Func<EntryEntity, bool>> filterPredicate = new();
-        private readonly Filters<Func<EntryEntity, int>> filterKeySelector = new();
+        private Func<EntryEntity, bool> predicate;
+        private Func<EntryEntity, int> keySelector;
 
         public SqlRepository(IServiceProvider serviceProvider)
         {
             _context = serviceProvider.GetRequiredService<TodoContext.TodoContext>();
-            // по умолчанию
-            predicate = filterPredicate.Get((e) => { return true; });
-            keySelector = filterKeySelector.Get((e) => { return e.EntryId; });
+        }
+
+        public void SetFilters(Filters filters)
+        {
+            predicate = filters.GetPredicate();
+            keySelector = filters.GetKeySelector();
         }
 
         public IQueryable<EntryEntity> GetEntries(int currentPage, int pageSize)
         {
-            var result = _context
+            var contextQuery = _context
                 .Entries
                 .Include(e => e.Initiator.UserStatus)
                 .Include(e => e.Executor.UserStatus)
                 .Include(p => p.TaskStatus)
                 .ToList();
 
-            var linqWork = result
+            var linqQuery = contextQuery
                 .OrderBy(e => keySelector(e))
                 .Where(e => predicate(e))
                 .Skip(currentPage * pageSize)
                 .Take(pageSize)
                 .AsQueryable();
-            return linqWork;
+
+            return linqQuery;
         }
 
         public EntryEntity GetEntry(int id)
@@ -56,48 +58,17 @@ namespace TodoList.DataAccess
 
         public int GetEntriesCount()
         {
-            return _context.Entries.Count();
-        }
-
-        public int GetEntriesCount(int filter)
-        {
-            predicate = filterPredicate.Get((e) => { return e.TaskStatus.ProblemStatusId == filter; });
-
-            var sqlQuerry = _context
+            var contextQuerry = _context
                 .Entries
                 .Include(p => p.TaskStatus)
                 .ToList();
 
-            var linqQuerryResult = sqlQuerry
+            var linqQuery = contextQuerry
                 .OrderBy(e => keySelector(e))
                 .Where(e => predicate(e))
                 .Count();
 
-            return linqQuerryResult;
-        }
-
-        public IQueryable<EntryEntity> GetEntries(int currentPage, int pageSize, int problemStatusFilter)
-        {
-            // TODO: позже надо сделать их настройку в отдельном методе
-            //keySelector = (e) => { return e.EntryId; };
-            //predicate = (e) => { return e.TaskStatus.ProblemStatusId == problemStatusFilter; };
-            predicate = filterPredicate.Get((e) => { return e.TaskStatus.ProblemStatusId == problemStatusFilter; });
-
-            var result = _context
-                .Entries
-                .Include(e => e.Initiator.UserStatus)
-                .Include(e => e.Executor.UserStatus)
-                .Include(p => p.TaskStatus)
-                .ToList();
-
-            var linqWork = result
-                .OrderBy(e => keySelector(e))
-                .Where(e => predicate(e))
-                .Skip(currentPage * pageSize)
-                .Take(pageSize)
-                .AsQueryable();
-
-            return linqWork;
+            return linqQuery;
         }
 
         public UserEntity GetUser(int id)
