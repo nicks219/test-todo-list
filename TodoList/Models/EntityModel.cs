@@ -37,7 +37,15 @@ namespace TodoList.Models
         public List<EntryEntity> GetEntries(int currentPage, int filter, out int correctedPage)
         {
             using var repo = _serviceScope.ServiceProvider.GetRequiredService<IRepository>();
-            int entriesCount = repo.GetEntriesCount();
+            int entriesCount = 0;
+            if (filter == NoFilter)
+            {
+                entriesCount = repo.GetEntriesCount();
+            }
+            else
+            {
+                entriesCount = repo.GetEntriesCount(filter);
+            }
 
             // TODO вынеси в одтельный метод
             int MaxPage = Math.DivRem(entriesCount, PageSize, out int remainder);

@@ -38,6 +38,7 @@ export class ReadEntries extends Component {
     }
 
     checkVailidity = (backlog) => {
+        // TODO: сделай валидацию по дэдлайну
         return false;
     }
 

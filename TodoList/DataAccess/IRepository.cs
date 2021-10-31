@@ -27,6 +27,8 @@ namespace TodoList.DataAccess
 
         int GetEntriesCount();
 
+        int GetEntriesCount(int filter);
+
         bool StatusExist();
     }
 }

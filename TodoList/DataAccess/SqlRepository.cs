@@ -12,12 +12,18 @@ namespace TodoList.DataAccess
     public class SqlRepository : IRepository
     {
         private readonly TodoContext.TodoContext _context;
-        private Func<EntryEntity, bool> predicate = (e) => { return true; };
-        private Func<EntryEntity, int> keySelector = (e) => { return e.EntryId; };
+        private Func<EntryEntity, bool> predicate;// = (e) => { return true; };
+        private Func<EntryEntity, int> keySelector;// = (e) => { return e.EntryId; };
+
+        private readonly Filters<Func<EntryEntity, bool>> filterPredicate = new();
+        private readonly Filters<Func<EntryEntity, int>> filterKeySelector = new();
 
         public SqlRepository(IServiceProvider serviceProvider)
         {
             _context = serviceProvider.GetRequiredService<TodoContext.TodoContext>();
+            // по умолчанию
+            predicate = filterPredicate.Get((e) => { return true; });
+            keySelector = filterKeySelector.Get((e) => { return e.EntryId; });
         }
 
         public IQueryable<EntryEntity> GetEntries(int currentPage, int pageSize)
@@ -29,13 +35,9 @@ namespace TodoList.DataAccess
                 .Include(p => p.TaskStatus)
                 .ToList();
 
-            // TODO: позже надо сделать их настройку
-            predicate = (e) => { return true; };
-            keySelector = (e) => { return e.EntryId; };
-
             var linqWork = result
                 .OrderBy(e => keySelector(e))
-                .Where(e => predicate(e))     
+                .Where(e => predicate(e))
                 .Skip(currentPage * pageSize)
                 .Take(pageSize)
                 .AsQueryable();
@@ -49,12 +51,38 @@ namespace TodoList.DataAccess
                 .Include(e => e.Initiator.UserStatus)
                 .Include(e => e.Executor.UserStatus)
                 .Include(p => p.TaskStatus)
-                //.Where(e => e.EntryId == id)
                 .FirstOrDefault(e => e.EntryId == id);
+        }
+
+        public int GetEntriesCount()
+        {
+            return _context.Entries.Count();
+        }
+
+        public int GetEntriesCount(int filter)
+        {
+            predicate = filterPredicate.Get((e) => { return e.TaskStatus.ProblemStatusId == filter; });
+
+            var sqlQuerry = _context
+                .Entries
+                .Include(p => p.TaskStatus)
+                .ToList();
+
+            var linqQuerryResult = sqlQuerry
+                .OrderBy(e => keySelector(e))
+                .Where(e => predicate(e))
+                .Count();
+
+            return linqQuerryResult;
         }
 
         public IQueryable<EntryEntity> GetEntries(int currentPage, int pageSize, int problemStatusFilter)
         {
+            // TODO: позже надо сделать их настройку в отдельном методе
+            //keySelector = (e) => { return e.EntryId; };
+            //predicate = (e) => { return e.TaskStatus.ProblemStatusId == problemStatusFilter; };
+            predicate = filterPredicate.Get((e) => { return e.TaskStatus.ProblemStatusId == problemStatusFilter; });
+
             var result = _context
                 .Entries
                 .Include(e => e.Initiator.UserStatus)
@@ -62,13 +90,9 @@ namespace TodoList.DataAccess
                 .Include(p => p.TaskStatus)
                 .ToList();
 
-            // TODO: позже надо сделать их настройку
-            keySelector = (e) => { return e.EntryId; };
-            predicate = (e) => { return e.TaskStatus.ProblemStatusId == problemStatusFilter; };
-             
             var linqWork = result
                 .OrderBy(e => keySelector(e))
-                .Where(e => predicate(e))   
+                .Where(e => predicate(e))
                 .Skip(currentPage * pageSize)
                 .Take(pageSize)
                 .AsQueryable();
@@ -106,8 +130,8 @@ namespace TodoList.DataAccess
                 case "EntryEntity":
                     _context.Entries.Add((EntryEntity)entity);
                     break;
-                case "UserStatusEntity":                  
-                    _context.UserStatus.Add((UserStatusEntity)entity);                                       
+                case "UserStatusEntity":
+                    _context.UserStatus.Add((UserStatusEntity)entity);
                     break;
                 case "ProblemStatusEntity":
                     _context.ProblemStatus.Add((ProblemStatusEntity)entity);
@@ -128,11 +152,6 @@ namespace TodoList.DataAccess
         public async ValueTask DisposeAsync()
         {
             await _context.DisposeAsync().ConfigureAwait(false);
-        }
-
-        public int GetEntriesCount()
-        {
-            return _context.Entries.Count();
         }
 
         public int Update(EntryEntity entry)
