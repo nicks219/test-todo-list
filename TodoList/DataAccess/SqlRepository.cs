@@ -18,8 +18,8 @@ namespace TodoList.DataAccess
 
         public SqlRepository(IServiceProvider serviceProvider)
         {
-            //_context = serviceProvider.GetRequiredService<TodoContext.TodoContext>();
-            _context = serviceProvider.GetService<TodoContext.TodoContext>();
+            _context = serviceProvider.GetRequiredService<TodoContext.TodoContext>();
+            //_context = serviceProvider.GetService<TodoContext.TodoContext>();
         }
 
         public void SetFilters(Filters filters)
@@ -75,13 +75,13 @@ namespace TodoList.DataAccess
         public UserEntity GetUser(int id)
         {
             var result = _context.Users.Find(id);
+            return result;
 
             //var result = _context
             //    .Users
             //    //.Where(u => u.UserId == id)
             //    .Include(u => u.UserStatus)
             //    .FirstOrDefault(u => u.UserId == id);
-            return result;
             // return _context.Users.Find(id);
         }
 
@@ -145,6 +145,9 @@ namespace TodoList.DataAccess
 
         public int Update(EntryEntity entry)
         {
+
+            //_context.Attach<UserEntity>(entry.Initiator);
+            //_context.Attach<UserEntity>(entry.Executor);
             _context.Entries.Update(entry);
 
             var result = _context.SaveChanges();

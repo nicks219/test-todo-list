@@ -58,7 +58,7 @@ namespace TodoList.Models
         {
             using var repo = _serviceScope.ServiceProvider.GetRequiredService<IRepository>();
             return repo.CreateStubs();
-        } 
+        }
 
         internal List<UserEntity> GetUsers()
         {
@@ -79,10 +79,9 @@ namespace TodoList.Models
             var taskStatus = repo.GetProblemStatus((ProblemStatus)dto.TaskStatus.ProblemStatusId);
             dto.TaskStatus = taskStatus;
 
-            var user = repo.GetUser(dto.Initiator.UserId);
-
-            //WARNING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
-            // так - не работает:
+            //var user1 = repo.GetUser(dto.Initiator.UserId);
+            //var user2 = repo.GetUser(dto.Executor.UserId);
+            // так - не работает, надо к модели
             //dto.Initiator = user1;
             //dto.Executor = user1;
 
@@ -90,11 +89,8 @@ namespace TodoList.Models
 
             // так - работает
             // почему????????????
-            // причем для update все работает
-            // EntryId = 0 нужен для create
-
-            model.Initiator = user;
-            model.Executor = user;
+            model.Initiator = repo.GetUser(dto.Initiator.UserId);
+            model.Executor = repo.GetUser(dto.Executor.UserId);
             model.EntryId = 0;
 
             var result2 = repo.Create(model);
@@ -112,13 +108,20 @@ namespace TodoList.Models
 
             var taskStatus = repo.GetProblemStatus((ProblemStatus)dto.TaskStatus.ProblemStatusId);
             dto.TaskStatus = taskStatus;
+            // так - не работает, надо к модели
+            //var user1 = repo.GetUser(dto.Initiator.UserId);
+            //var user2 = repo.GetUser(dto.Executor.UserId);
 
             EntryEntity model = EntryDto.ConvertFromDto(dto);
+            // так - работает
+            // почему????????????
+            model.Initiator = repo.GetUser(dto.Initiator.UserId);
+            model.Executor = repo.GetUser(dto.Executor.UserId);
 
             var result2 = repo.Update(model);
 
             var result = repo.GetEntry(model.EntryId);
-            return result; // != 0
+            return result;
         }
 
         private static int FixPageNumber(int currentPage, int entriesCount)

@@ -6,7 +6,7 @@ using TodoList.DataAccess.TodoContext;
 
 namespace TodoList.DataAccess
 {
-    public class Filters
+    public class Filters// : IFilter
     {
         private Func<EntryEntity, bool> predicate;
         private Func<EntryEntity, int> keySelector;

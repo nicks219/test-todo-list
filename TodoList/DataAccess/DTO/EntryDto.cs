@@ -39,7 +39,7 @@ namespace TodoList.DataAccess.DTO
 
         // Необходим для десериализации
         [JsonConstructor]
-        public EntryDto() {}
+        public EntryDto() { }
 
         public EntryDto(EntryEntity entry, int currentPage = 0)
         {
@@ -66,15 +66,15 @@ namespace TodoList.DataAccess.DTO
             EntryEntity entryEntity = new()
             {
                 CompletionDate = model.CompletionDate,// DateTime никогда не равен null
-                Deadline = model.Deadline,//
+                Deadline = model.Deadline,
                 Description = model.Description,
-                EntryId = model.EntryId,//
-                Executor = model.Executor,//
-                Initiator = model.Initiator,//
+                EntryId = model.EntryId,
+                Executor = model.Executor,
+                Initiator = model.Initiator,
                 Report = model.Report,
-                StartDate = model.StartDate,//
-                TaskStatus = model.TaskStatus,//
-                Title = model.Title//
+                StartDate = model.StartDate,
+                TaskStatus = model.TaskStatus,
+                Title = model.Title
             };
             return entryEntity;
         }

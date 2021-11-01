@@ -30,7 +30,5 @@ namespace TodoList.DataAccess
         bool StatusExist();
 
         void SetFilters(Filters filters);
-
-
     }
 }

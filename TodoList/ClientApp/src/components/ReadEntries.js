@@ -79,8 +79,8 @@ export class ReadEntries extends Component {
                                 <td>{backlog.title}</td>
                                 <td>{backlog.initiator.name}</td>
                                 <td>{backlog.executor.name}</td>
-                                <td>{backlog.deadline}</td>
                                 <td>{backlog.startDate}</td>
+                                <td>{backlog.deadline}</td>
                                 <td>{backlog.completionDate}</td>
                             </tr>
                             <tr>

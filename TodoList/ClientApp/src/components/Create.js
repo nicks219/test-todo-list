@@ -1,5 +1,14 @@
-﻿import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+﻿import React, { Component, useState } from 'react';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
+// TODO: учист писать функциональные компоненты на хуках, вот пример моего календаря:
+const Example = () => {
+    const [startDate, setStartDate] = useState(new Date());
+    return (
+        <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} />
+    );
+};
 
 export class Create extends Component {
     static displayName = Create.name;
@@ -9,21 +18,18 @@ export class Create extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { backlog: [], problemStatuses: [], users: [], loading: true };
+        this.state = { backlog: [], problemStatuses: [], users: [], date: new Date(), loading: true };
         // костыль: при "обновлении" будет загружена первая запись, но хотя бы не "отвалится"
         if (props.location.fromReadComponent != undefined) {
             this.id = props.location.propsState;
             this.page = props.location.fromReadComponent;
         }
-        console.log("CREATE");
     }
 
     componentDidMount() {
-
-        // ОТСЮДА МЫ НАЧИНАЕМ
         this.getProblemStatus();
         this.getUsers();
-        // ЭТО НАМ НЕ НАДО, МЫ НАЧНЕМ С ПУСТОГО EntryEntity
+        // нам надо начинать с "пустой" сущности
         this.getEntriesData();
     }
 
@@ -52,6 +58,13 @@ export class Create extends Component {
         return false;
     }
 
+    setStartDate = (dt) => {
+        const data = this.state.backlog;
+        data.startDate = dt.toISOString();
+        data.deadline = dt.toISOString();
+        this.setState({ date: dt, backlog: data } );
+    }
+
     renderBacklogTable(backlog) {
 
         return (
@@ -61,14 +74,9 @@ export class Create extends Component {
                         <th>
                             <button onClick={this.create} className="btn btn-info">CRTE</button>
                         </th>
-                        {/*<th>*/}
-                        {/*    <Link to={{*/}
-                        {/*        pathname: '/', fromUpdateComponent: this.page,*/}
-                        {/*        filter: this.state.backlog.taskStatus.problemStatusId*/}
-                        {/*    }}>*/}
-                        {/*        <button className="btn btn-info">RTRN</button>*/}
-                        {/*    </Link>*/}
-                        {/*</th>*/}
+                        <th>
+                            <DatePicker selected={this.state.date} onChange={(date) => this.setStartDate(date)} />
+                        </th>
                     </tr>
                     <tr>
                         <th>Title</th>
@@ -90,14 +98,13 @@ export class Create extends Component {
                                     {this.state.users.map((a, i) =>
                                         <option value={i} key={i.toString() + 'i'}>
                                             {a.name}
-                                            {/*{backlog.initiator.name}*/}
                                         </option>
                                     )}
                                 </select>
                             </td>
                             <td>{backlog.executor.name}</td>
-                            <td>{backlog.deadline}</td>
                             <td>{backlog.startDate}</td>
+                            <td>{backlog.deadline}</td>
                             <td>{backlog.completionDate}</td>
                             <td>
                                 <select onChange={this.select} value={Number(backlog.taskStatus.problemStatusId - 1)} id={1}>
@@ -143,21 +150,21 @@ export class Create extends Component {
         );
     }
 
+    // нам надо начинать с "пустой" сущности
     async getEntriesData() {
         const response = await fetch('entry/ongetentry?id=' + this.id);
         const data = await response.json();
+
         data.description = data.description.substring(0, 20);
+        data.startDate = this.state.date.toISOString();// выводить надо .toTimeString() например
+        data.deadline = this.state.date.toISOString();// ISO норм проходит на бэк
+
         this.setState({ backlog: data, loading: false });
     }
 
     // ПОСТИМ DTO
     async postEntriesData() {
-        //var item = { EntryId: 1 };
-        //var requestBody = JSON.stringify(item);
-        //requestBody = { "EntryId": 1 };//??????????????????????????????
-
         var requestBody = JSON.stringify(this.state.backlog);
-
         const response = await fetch('entry/onpostcreate',
             { method: "POST", headers: { 'Content-Type': "application/json;charset=utf-8" }, body: requestBody });
         const data = await response.json();

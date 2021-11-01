@@ -28,6 +28,7 @@ namespace TodoList
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IRules, Rules>();
+            //services.AddSingleton<IFilter, Filters>();
 
             services.AddSwaggerGen(c =>
             {
