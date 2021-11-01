@@ -12,3 +12,16 @@ code {
   background-color: #1b6ec2;
   border-color: #1861ac;
 }
+
+body {
+    background: #1e1e1e;
+    color: #77abc6;
+}
+
+#theme {
+    color: #77abc6;
+}
+
+#theme2 {
+    background: #3a7671;
+}

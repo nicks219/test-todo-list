@@ -2,7 +2,7 @@
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-// TODO: учист писать функциональные компоненты на хуках, вот пример моего календаря:
+// TODO: учись писать функциональные компоненты на хуках, вот пример моего календаря:
 const Example = () => {
     const [startDate, setStartDate] = useState(new Date());
     return (
@@ -12,9 +12,14 @@ const Example = () => {
 
 export class Create extends Component {
     static displayName = Create.name;
+
     id = 0;
+
     page = 0;
+
     filter = 0;
+
+    expired = "#333333";
 
     constructor(props) {
         super(props);
@@ -42,19 +47,18 @@ export class Create extends Component {
         const data = this.state.backlog;
         const number = Number(e.target.value) + 1;
         const id = Number(e.target.id);
-        //console.log(id);
 
-        if (id == 1) data.taskStatus.problemStatusId = number;
-        if (id == 0) data.initiator.userId = number;
+        if (id === 1) data.taskStatus.problemStatusId = number;
+        if (id === 0) data.initiator.userId = number;
 
         this.setState({ backlog: data });
     }
 
-    expired = {
-        backgroundColor: "#FF0000"
-    }
+    //expired = {
+    //    backgroundColor: "#333333"
+    //}
 
-    checkVailidity = (backlog) => {
+    checkValidity = (backlog) => {
         return false;
     }
 
@@ -62,17 +66,17 @@ export class Create extends Component {
         const data = this.state.backlog;
         data.startDate = dt.toISOString();
         data.deadline = dt.toISOString();
-        this.setState({ date: dt, backlog: data } );
+        this.setState({ date: dt, backlog: data });
     }
 
     renderBacklogTable(backlog) {
 
         return (
-            <table className='table table-striped' aria-labelledby="tabelLabel">
+            <table className='table table-striped' aria-labelledby="tabelLabel" id="theme">
                 <thead>
                     <tr key={"button"}>
                         <th>
-                            <button onClick={this.create} className="btn btn-info">CRTE</button>
+                            <button onClick={this.create} className="btn btn-info">CREATE</button>
                         </th>
                     </tr>
                     <tr>
@@ -88,7 +92,7 @@ export class Create extends Component {
                 <tbody>
 
                     <React.Fragment key={backlog.entryId}>
-                        <tr style={{ backgroundColor: this.checkVailidity(backlog) == true ? "white" : "red" }}>
+                        <tr style={{ backgroundColor: this.checkValidity(backlog) === true ? "white" : this.expired }}>
                             <td>{backlog.title}</td>
                             <td>
                                 <select onChange={this.select} value={Number(this.state.backlog.initiator.userId - 1)} id={0}>
@@ -101,11 +105,10 @@ export class Create extends Component {
                             </td>
                             <td>{backlog.executor.name}</td>
                             <td>
-                                <DatePicker selected={this.state.date} onChange={(date) => this.setStartDate(date)} />
+                                <DatePicker selected={this.state.date} onChange={(date) => this.setStartDate(date)}/>
                             </td>
-                            {/*<td>{backlog.startDate}</td>*/}
-                            <td>{backlog.deadline}</td>
-                            <td>{backlog.completionDate}</td>
+                            <td>{new Date(backlog.deadline).toDateString()}</td>
+                            <td>{new Date(backlog.completionDate).toDateString()}</td>
                             <td>
                                 <select onChange={this.select} value={Number(backlog.taskStatus.problemStatusId - 1)} id={1}>
                                     {this.state.problemStatuses.map((a, i) =>
@@ -119,7 +122,8 @@ export class Create extends Component {
                         <tr>
                             <th colSpan="2" scope="row">Description</th>
                             <td colSpan="3" style={{ display: '' }}>
-                                <textarea id={8} value={backlog.description} cols={66} rows={8} onChange={this.inputText} />
+                                <textarea id={8} value={backlog.description} cols={66} rows={8} onChange={this
+                                    .inputText} />
                             </td>
                         </tr>
                     </React.Fragment>
@@ -156,7 +160,6 @@ export class Create extends Component {
         const data = await response.json();
 
         data.description = data.description.substring(0, 20);
-        // выводить можно через .toTimeString()
         // ISO конвертится на стороне .NET
         data.startDate = this.state.date.toISOString();
         data.deadline = this.state.date.toISOString();

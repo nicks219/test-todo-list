@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using TodoList.BuisnesProcess;
 using TodoList.DataAccess.DTO;
-using TodoList.DataAccess.TodoContext;
 using TodoList.Models;
 
 namespace TodoList.Controllers
@@ -91,7 +90,6 @@ namespace TodoList.Controllers
             }
         }
 
-        /// Creates stubs
         [HttpPost]
         public bool? OnPostCreateStub()
         {
@@ -107,14 +105,13 @@ namespace TodoList.Controllers
             }
         }
 
-        // TODO: РАБОТАЕМ НАД CREATE
         [HttpPost("[action]")]
         public ActionResult<EntryDto> OnPostCreate([FromBody] EntryDto dto)
         {
             try
             {
-                // найди куда IRules прикрутить - вовнутрь прокинь
-                //if (_rules.IsModelValid(model))
+                // TODO: найди, куда IRules прикрутить
+                // if (_rules.IsModelValid(model))
                 using var scope = _serviceScopeFactory.CreateScope();
                 var result = new EntityModel(scope).CreateEntry(dto);
                 return EntryDto.ConvertToDto(result);

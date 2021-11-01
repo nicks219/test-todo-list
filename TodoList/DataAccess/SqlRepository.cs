@@ -12,8 +12,8 @@ namespace TodoList.DataAccess
     public class SqlRepository : IRepository
     {
         private readonly TodoContext.TodoContext _context;
-        private Func<EntryEntity, bool> predicate;
-        private Func<EntryEntity, int> keySelector;
+        private Func<EntryEntity, bool> _predicate;
+        private Func<EntryEntity, int> _keySelector;
 
         public SqlRepository(IServiceProvider serviceProvider)
         {
@@ -22,8 +22,8 @@ namespace TodoList.DataAccess
 
         public void SetFilters(Filters filters)
         {
-            predicate = filters.GetPredicate();
-            keySelector = filters.GetKeySelector();
+            _predicate = filters.GetPredicate();
+            _keySelector = filters.GetKeySelector();
         }
 
         public IQueryable<EntryEntity> GetEntries(int currentPage, int pageSize)
@@ -36,8 +36,8 @@ namespace TodoList.DataAccess
                 .ToList();
             // отдаю IQueryable с надеждой на будущие изменения
             var linqQuery = contextQuery
-                .OrderBy(e => keySelector(e))
-                .Where(e => predicate(e))
+                .OrderBy(e => _keySelector(e))
+                .Where(e => _predicate(e))
                 .Skip(currentPage * pageSize)
                 .Take(pageSize)
                 .AsQueryable();
@@ -63,8 +63,8 @@ namespace TodoList.DataAccess
                 .ToList();
             // отдаю IQueryable с надеждой на будущие изменения
             var linqQuery = contextQuerry
-                .OrderBy(e => keySelector(e))
-                .Where(e => predicate(e))
+                .OrderBy(e => _keySelector(e))
+                .Where(e => _predicate(e))
                 .Count();
 
             return linqQuery;

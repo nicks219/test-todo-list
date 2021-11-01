@@ -3,7 +3,11 @@ import { Link } from 'react-router-dom';
 
 export class ReadEntries extends Component {
     static displayName = ReadEntries.name;
+
     page = 0;
+
+    expired = "#333333";
+
     // костыль для старта: 6 - отсутствие фильтрации на бэке
     filter = 6;
 
@@ -33,18 +37,18 @@ export class ReadEntries extends Component {
         this.getEntriesData();
     }
 
-    expired = {
-        backgroundColor: "#FF0000"
-    }
+    //expired = {
+    //    backgroundColor: "#333333"
+    //}
 
-    checkVailidity = (backlog) => {
+    checkValidity = (backlog) => {
         // TODO: сделай валидацию по дэдлайну
         return false;
     }
 
     renderBacklogTable(backlog) {
         return (
-            <table className='table table-striped' aria-labelledby="tabelLabel">
+            <table className='table table-striped' aria-labelledby="tabelLabel" id="theme">
                 <thead>
                     <tr key={"button"}>
                         <th>
@@ -75,13 +79,13 @@ export class ReadEntries extends Component {
                 <tbody>
                     {backlog.map(backlog =>
                         <React.Fragment key={backlog.entryId}>
-                            <tr style={{ backgroundColor: this.checkVailidity(backlog) == true ? "white" : "red" }}>
+                            <tr style={{ backgroundColor: this.checkValidity(backlog) === true ? "white" : this.expired }}>
                                 <td>{backlog.title}</td>
                                 <td>{backlog.initiator.name}</td>
                                 <td>{backlog.executor.name}</td>
-                                <td>{backlog.startDate}</td>
-                                <td>{backlog.deadline}</td>
-                                <td>{backlog.completionDate}</td>
+                                <td>{new Date(backlog.startDate).toDateString()}</td>
+                                <td>{new Date(backlog.deadline).toDateString()}</td>
+                                <td>{new Date(backlog.completionDate).toDateString()}</td>
                             </tr>
                             <tr>
                                 <th colSpan="2" scope="row">Description</th>
@@ -89,8 +93,12 @@ export class ReadEntries extends Component {
                                     {backlog.description.substring(0, 80) + "..."}
                                 </td>
                                 <td>
-                                    <Link to={{ pathname: '/update', propsState: backlog.entryId, fromReadComponent: this.page }}>
-                                        <button className="btn btn-info">UPDT</button>
+                                    <Link to={{
+                                        pathname: '/update',
+                                        propsState: backlog.entryId,
+                                        fromReadComponent: this.page
+                                    }}>
+                                        <button className="btn btn-info">UPDATE</button>
                                     </Link>
                                 </td>
                             </tr>
@@ -130,7 +138,7 @@ export class ReadEntries extends Component {
 
         const response = await fetch('entry/ongetpage?page=' + this.page + "&filter=" + this.filter);
         const data = await response.json();
-        
+
         if (data != null && data.length > 0) this.page = data[0].currentPage;
 
         this.setState({ backlog: data, loading: false });

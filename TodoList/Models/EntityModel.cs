@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,6 +35,7 @@ namespace TodoList.Models
 
         public List<EntryEntity> GetEntries(int currentPage, int filter, out int correctedPage)
         {
+            // фильтр через DI в таком виде работает некорректно
             Filters filters = new();
             if (filter != NoFilter)
             {
@@ -80,13 +80,13 @@ namespace TodoList.Models
             UserEntity user2 = repo.GetUser(dto.Executor.UserId);
             dto.TaskStatus = taskStatus;
             dto.Initiator = user1;
-            dto.Executor = user1;
+            dto.Executor = user2;
 
-            var model = EntryDto.ConvertFromDto(dto);
+            EntryEntity model = EntryDto.ConvertFromDto(dto);
 
             model.EntryId = 0;
 
-            var result2 = repo.Create(model);
+            repo.Create(model);
 
             var result = repo.GetEntry(model.EntryId);
             return result;
@@ -104,11 +104,11 @@ namespace TodoList.Models
             UserEntity user2 = repo.GetUser(dto.Executor.UserId);
             dto.TaskStatus = taskStatus;
             dto.Initiator = user1;
-            dto.Executor = user1;
+            dto.Executor = user2;
 
             EntryEntity model = EntryDto.ConvertFromDto(dto);
 
-            var result2 = repo.Update(model);
+            repo.Update(model);
 
             var result = repo.GetEntry(model.EntryId);
             return result;
@@ -116,15 +116,15 @@ namespace TodoList.Models
 
         private static int FixPageNumber(int currentPage, int entriesCount)
         {
-            int MaxPage = Math.DivRem(entriesCount, PageSize, out int remainder);
+            int maxPage = Math.DivRem(entriesCount, PageSize, out int remainder);
             if (remainder > 0)
             {
-                MaxPage++;
+                maxPage++;
             }
 
-            if (currentPage >= MaxPage)
+            if (currentPage >= maxPage)
             {
-                currentPage = --MaxPage;
+                currentPage = --maxPage;
             }
 
             if (currentPage < MinPage)

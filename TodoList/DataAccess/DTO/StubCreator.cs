@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using TodoList.BuisnesProcess;
 using TodoList.DataAccess.TodoContext;
 
@@ -7,7 +6,7 @@ namespace TodoList.DataAccess.DTO
 {
     public static class StubCreator
     {
-        public readonly static string lorenIpsum =
+        public static readonly string LorenIpsum =
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor " +
             "incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud " +
             "exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure " +
@@ -22,35 +21,35 @@ namespace TodoList.DataAccess.DTO
             {
                 foreach (var status in Enum.GetNames(typeof(UserStatus)))
                 {
-                    var us = (UserStatus)Enum.Parse(typeof(UserStatus), status);
+                    //var us = (UserStatus)Enum.Parse(typeof(UserStatus), status);
                     //repo.CreateUserStatus(new UserStatusEntity()
                     repo.Create(new UserStatusEntity()
                     { UserStatusName = status });
                 }
                 foreach (var status in Enum.GetNames(typeof(ProblemStatus)))
                 {
-                    var ps = (ProblemStatus)Enum.Parse(typeof(ProblemStatus), status);
+                    //var ps = (ProblemStatus)Enum.Parse(typeof(ProblemStatus), status);
                     //repo.CreateProblemStatus(new ProblemStatusEntity()
                     repo.Create(new ProblemStatusEntity()
                     { ProblemStatusName = status });
                 }
                 //var result1 = repo.CreateUser(new UserEntity()
-                var result1 = repo.Create(new UserEntity()
+                repo.Create(new UserEntity()
                 {
                     Name = "John",
-                    UserStatus = repo.GetUserStatus(UserStatus.INITIATOR)
+                    UserStatus = repo.GetUserStatus(UserStatus.Initiator)
                 });
                 //var result2 = repo.CreateUser(new UserEntity()
-                var result2 = repo.Create(new UserEntity()
+                repo.Create(new UserEntity()
                 {
                     Name = "Slame",
-                    UserStatus = repo.GetUserStatus(UserStatus.EXECUTOR)
+                    UserStatus = repo.GetUserStatus(UserStatus.Executor)
                 });
             }
             
             var user1 = repo.GetUser(1);
             var user2 = repo.GetUser(2);
-            var status1 = repo.GetProblemStatus(ProblemStatus.CLOSED);
+            var status1 = repo.GetProblemStatus(ProblemStatus.Closed);
             
             //repo.CreateEntry(entry);
             int count = 2;
@@ -65,7 +64,7 @@ namespace TodoList.DataAccess.DTO
                     CompletionDate = date,
                     StartDate = date,
                     Title = "Next Task",
-                    Description = lorenIpsum,
+                    Description = LorenIpsum,
                     TaskStatus = status1
                 };
                 repo.Create(entry1);

@@ -1,6 +1,4 @@
-﻿using TodoList.BuisnesProcess;
-
-namespace TodoList.DataAccess.TodoContext
+﻿namespace TodoList.DataAccess.TodoContext
 {
     public class ProblemStatusEntity : IEntity
     {

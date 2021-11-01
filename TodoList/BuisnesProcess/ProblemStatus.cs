@@ -4,11 +4,11 @@
     public enum ProblemStatus
     {
         // id в sql идут от 1, enum идут от 0
-        NEW = 1,
-        IN_PROGRESS = 2,
-        COMPLITED = 3,
-        CLOSED = 4,
-        CANCELLED = 5,
-        ALL = 6
+        New = 1,
+        InProgress = 2,
+        Complited = 3,
+        Closed = 4,
+        Cancelled = 5,
+        All = 6
     }
 }

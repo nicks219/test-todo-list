@@ -1,6 +1,4 @@
-﻿using TodoList.BuisnesProcess;
-
-namespace TodoList.DataAccess.TodoContext
+﻿namespace TodoList.DataAccess.TodoContext
 {
     public class UserEntity : IEntity
     {
@@ -10,7 +8,7 @@ namespace TodoList.DataAccess.TodoContext
 
         public UserStatusEntity UserStatus { get; set; }
 
-        /// Many-to-many на данный момент не нужно, но понадобится в дальнейшем
+        // Many-to-many на данный момент не нужно, но понадобится в дальнейшем
         //public ICollection<UserEntryEntity> UserEntryBind { get; set; }
     }
 }

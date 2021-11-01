@@ -3,6 +3,7 @@ using TodoList.DataAccess.TodoContext;
 
 namespace TodoList.DataAccess
 {
+    // Не удалось использовать Filters через DI
     public interface IFilter
     {
         //public const int NoFilter = 6;

@@ -2,13 +2,13 @@
 
 namespace TodoList.DataAccess.DTO
 {
-    /// Код полностью дублируется в BuisnesProcess.Rules, пока не знаю как лучше
+    // Код полностью дублируется в BuisnesProcess.Rules, пока не знаю как лучше
     public static class EntryRules
     {
         private static readonly int TITLE_MIN_LENGTH = 5;
         private static readonly int REPORT_MIN_LENGTH = 5;
 
-        /// Entry model validation rules
+        // Entry model validation rules
         public static bool IsModelValid(this EntryEntity entry)
         {
             if (string.IsNullOrEmpty(entry.Title) || string.IsNullOrEmpty(entry.Report)) return false;
@@ -21,12 +21,12 @@ namespace TodoList.DataAccess.DTO
 
             if (entry.Initiator == null || entry.Executor == null) return false;
 
-            /// DateTime возможно лучше создавать на стороне сервера
-            /// по умолчанию этот тип имеет значение DateTime.MinValue
+            // DateTime возможно лучше создавать на стороне сервера
+            // по умолчанию этот тип имеет значение DateTime.MinValue
             if (entry.Deadline == System.DateTime.MinValue) entry.Deadline = System.DateTime.Now;
             //if (entry.Deadline == System.DateTime.MinValue) return false;
 
-            /// 
+            // 
             return true;
         }
     }

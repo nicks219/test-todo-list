@@ -11,7 +11,7 @@ namespace TodoList.Logger
 
         private readonly string _categoryName;
 
-        private static readonly object Lock = new object();
+        private static readonly object Lock = new();
 
         public FileLogger(string path, string categoryName)
         {

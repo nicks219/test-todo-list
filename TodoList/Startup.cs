@@ -39,7 +39,7 @@ namespace TodoList
             string connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<TodoContext>(options => options.UseSqlServer(connectionString));
 
-            /// Views и папка Pages оставлены для вывода стэк-трейса в окно браузера на период разработки
+            // Views и папка Pages оставлены для вывода стэк-трейса в окно браузера на период разработки
             services.AddControllersWithViews();
             //services.AddControllers();
 
@@ -93,7 +93,6 @@ namespace TodoList
             var logger = loggerFactory.CreateLogger(typeof(FileLogger));
             logger.LogInformation("App started at {0}, is 64-bit process: {1}", DateTime.Now, Environment.Is64BitProcess);
 
-            // TODO: разберись
             var serviceScopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
             using var serviceScope = serviceScopeFactory.CreateScope();
             var dbContext = serviceScope.ServiceProvider.GetService<TodoContext>();

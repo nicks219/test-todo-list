@@ -1,12 +1,16 @@
-﻿import { data } from 'jquery';
-import React, { Component } from 'react';
+﻿import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
 export class Update extends Component {
     static displayName = Update.name;
+
     id = 0;
+
     page = 0;
+
     filter = 0;
+
+    expired = "#333333";
 
     constructor(props) {
         super(props);
@@ -35,28 +39,30 @@ export class Update extends Component {
         this.setState({ backlog: data });
     }
 
-    expired = {
-        backgroundColor: "#FF0000"
-    }
+    //expired = {
+    //    backgroundColor: "#333333"
+    //}
 
-    checkVailidity = (backlog) => {
+    checkValidity = (backlog) => {
         return false;
     }
 
     renderBacklogTable(backlog) {
 
         return (
-            <table className='table table-striped' aria-labelledby="tabelLabel">
+            <table className='table table-striped' aria-labelledby="tabelLabel" id="theme">
                 <thead>
                     <tr key={"button"}>
                         <th>
-                            <button onClick={this.update} className="btn btn-info">UPDT</button>
+                            <button onClick={this.update} className="btn btn-info">UPDATE</button>
                         </th>
                         <th>
                             <Link to={{
-                                pathname: '/', fromUpdateComponent: this.page,
-                                filter: this.state.backlog.taskStatus.problemStatusId }}>
-                                <button className="btn btn-info">RTRN</button>
+                                pathname: '/',
+                                fromUpdateComponent: this.page,
+                                filter: this.state.backlog.taskStatus.problemStatusId
+                            }}>
+                                <button className="btn btn-info">RETURN</button>
                             </Link>
                         </th>
                     </tr>
@@ -73,13 +79,13 @@ export class Update extends Component {
                 <tbody>
 
                     <React.Fragment key={backlog.entryId}>
-                        <tr style={{ backgroundColor: this.checkVailidity(backlog) == true ? "white" : "red" }}>
+                        <tr style={{ backgroundColor: this.checkValidity(backlog) === true ? "white" : this.expired }}>
                             <td>{backlog.title}</td>
                             <td>{backlog.initiator.name}</td>
                             <td>{backlog.executor.name}</td>
-                            <td>{backlog.startDate}</td>
-                            <td>{backlog.deadline}</td>
-                            <td>{backlog.completionDate}</td>
+                            <td>{new Date(backlog.startDate).toDateString()}</td>
+                            <td>{new Date(backlog.deadline).toDateString()}</td>
+                            <td>{new Date(backlog.completionDate).toDateString()}</td>
                             <td>
                                 <select onChange={this.select} value={Number(backlog.taskStatus.problemStatusId - 1)}>
                                     {this.state.problemStatuses.map((a, i) =>
@@ -93,7 +99,8 @@ export class Update extends Component {
                         <tr>
                             <th colSpan="2" scope="row">Description</th>
                             <td colSpan="3" style={{ display: '' }}>
-                                <textarea id={8} value={backlog.description} cols={66} rows={8} onChange={this.inputText} />
+                                <textarea id={8} value={backlog.description} cols={66} rows={8} onChange={this
+                                    .inputText} />
                             </td>
                         </tr>
                     </React.Fragment>

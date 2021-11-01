@@ -2,9 +2,9 @@
 {
     public enum ActionStatus
     {
-        CREATE,
-        READ,
-        UPDATE,
-        DELETE
+        Create,
+        Read,
+        Update,
+        Delete
     }
 }

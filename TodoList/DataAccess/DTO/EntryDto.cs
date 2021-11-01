@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using TodoList.BuisnesProcess;
-using TodoList.DataAccess.TodoContext;
 using System.Linq;
 using System.Text.Json.Serialization;
+using TodoList.DataAccess.TodoContext;
 
 namespace TodoList.DataAccess.DTO
 {
     public class EntryDto
     {
-        /// Правила ролевого доступа
+        // Правила ролевого доступа
         //public List<ProblemStatus> ValidStatuses { get; set; }
         //public List<ActionStatus> ValidActions { get; set; }
 
@@ -93,7 +92,7 @@ namespace TodoList.DataAccess.DTO
 
         public static List<EntryDto> Error(String message)
         {
-            return new List<EntryDto> { new EntryDto(message) };
+            return new List<EntryDto> { new (message) };
         }
     }
 }

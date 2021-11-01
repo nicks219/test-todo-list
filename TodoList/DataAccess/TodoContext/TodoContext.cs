@@ -24,7 +24,7 @@ namespace TodoList.DataAccess.TodoContext
 
         public DbSet<ProblemStatusEntity> ProblemStatus { get; set; }
 
-        /// Many-to-many на данный момент не нужно, но понадобится в дальнейшем
+        // Many-to-many на данный момент не нужно, но понадобится в дальнейшем
         //public DbSet<UserEntryEntity> UsersEntries { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -41,7 +41,7 @@ namespace TodoList.DataAccess.TodoContext
             modelBuilder.Entity<ProblemStatusEntity>()
                 .HasKey(k => k.ProblemStatusId);
 
-            /// Many-to-many на данный момент не нужно, но понадобится в дальнейшем
+            // Many-to-many на данный момент не нужно, но понадобится в дальнейшем
             //modelBuilder.Entity<UserEntryEntity>()
             //    .HasKey(k => new { UserId = k.UserId, EntryId = k.EntryId });
             //modelBuilder.Entity<UserEntryEntity>()

@@ -4,8 +4,8 @@
     public enum UserStatus
     {
         // id в sql идут от 1, enum идут от 0
-        ADMIN = 1,
-        INITIATOR = 2,
-        EXECUTOR = 3
+        Admin = 1,
+        Initiator = 2,
+        Executor = 3
     }
 }

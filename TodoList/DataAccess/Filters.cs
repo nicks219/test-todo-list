@@ -1,41 +1,38 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using TodoList.DataAccess.TodoContext;
 
 namespace TodoList.DataAccess
 {
-    public class Filters// : IFilter
+    public class Filters
     {
-        private Func<EntryEntity, bool> predicate;
-        private Func<EntryEntity, int> keySelector;
+        private Func<EntryEntity, bool> _predicate;
+        private Func<EntryEntity, int> _keySelector;
 
-        public Filters() 
+        public Filters()
         {
             // правила фильтрации по умолчанию
-            predicate = (e) => { return true; };
-            keySelector = (e) => { return e.EntryId; };
+            _predicate = (e) => { return true; };
+            _keySelector = (e) => { return e.EntryId; };
         }
 
         public void SetPredicate(Func<EntryEntity, bool> predicate)
         {
-            this.predicate = predicate;
+            _predicate = predicate;
         }
 
         public Func<EntryEntity, bool> GetPredicate()
         {
-            return predicate;
+            return _predicate;
         }
 
         public void SetKeySelector(Func<EntryEntity, int> keySelector)
         {
-            this.keySelector = keySelector;
+            _keySelector = keySelector;
         }
 
         public Func<EntryEntity, int> GetKeySelector()
         {
-            return keySelector;
+            return _keySelector;
         }
     }
 }
