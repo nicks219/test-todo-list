@@ -65,7 +65,7 @@ namespace TodoList.DataAccess.DTO
         {
             EntryEntity entryEntity = new()
             {
-                CompletionDate = model.CompletionDate,// DateTime никогда не равен null
+                CompletionDate = model.CompletionDate,
                 Deadline = model.Deadline,
                 Description = model.Description,
                 EntryId = model.EntryId,

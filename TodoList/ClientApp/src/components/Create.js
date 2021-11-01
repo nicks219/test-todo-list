@@ -42,7 +42,7 @@ export class Create extends Component {
         const data = this.state.backlog;
         const number = Number(e.target.value) + 1;
         const id = Number(e.target.id);
-        console.log(id);
+        //console.log(id);
 
         if (id == 1) data.taskStatus.problemStatusId = number;
         if (id == 0) data.initiator.userId = number;
@@ -74,9 +74,6 @@ export class Create extends Component {
                         <th>
                             <button onClick={this.create} className="btn btn-info">CRTE</button>
                         </th>
-                        <th>
-                            <DatePicker selected={this.state.date} onChange={(date) => this.setStartDate(date)} />
-                        </th>
                     </tr>
                     <tr>
                         <th>Title</th>
@@ -94,7 +91,7 @@ export class Create extends Component {
                         <tr style={{ backgroundColor: this.checkVailidity(backlog) == true ? "white" : "red" }}>
                             <td>{backlog.title}</td>
                             <td>
-                                <select onChange={this.select} id={0}>
+                                <select onChange={this.select} value={Number(this.state.backlog.initiator.userId - 1)} id={0}>
                                     {this.state.users.map((a, i) =>
                                         <option value={i} key={i.toString() + 'i'}>
                                             {a.name}
@@ -103,7 +100,10 @@ export class Create extends Component {
                                 </select>
                             </td>
                             <td>{backlog.executor.name}</td>
-                            <td>{backlog.startDate}</td>
+                            <td>
+                                <DatePicker selected={this.state.date} onChange={(date) => this.setStartDate(date)} />
+                            </td>
+                            {/*<td>{backlog.startDate}</td>*/}
                             <td>{backlog.deadline}</td>
                             <td>{backlog.completionDate}</td>
                             <td>
@@ -150,19 +150,20 @@ export class Create extends Component {
         );
     }
 
-    // нам надо начинать с "пустой" сущности
+    // надо начинать с "пустой" сущности
     async getEntriesData() {
         const response = await fetch('entry/ongetentry?id=' + this.id);
         const data = await response.json();
 
         data.description = data.description.substring(0, 20);
-        data.startDate = this.state.date.toISOString();// выводить надо .toTimeString() например
-        data.deadline = this.state.date.toISOString();// ISO норм проходит на бэк
+        // выводить можно через .toTimeString()
+        // ISO конвертится на стороне .NET
+        data.startDate = this.state.date.toISOString();
+        data.deadline = this.state.date.toISOString();
 
         this.setState({ backlog: data, loading: false });
     }
 
-    // ПОСТИМ DTO
     async postEntriesData() {
         var requestBody = JSON.stringify(this.state.backlog);
         const response = await fetch('entry/onpostcreate',

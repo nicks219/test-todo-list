@@ -9,7 +9,6 @@ using TodoList.DataAccess.TodoContext;
 namespace TodoList.DataAccess
 {
     // закомментированные методы не удаляю, возможно пригодятся
-    // TODO: c filtered страницы на фронты некорректно возвращается после update-> rtrn
     public class SqlRepository : IRepository
     {
         private readonly TodoContext.TodoContext _context;
@@ -19,7 +18,6 @@ namespace TodoList.DataAccess
         public SqlRepository(IServiceProvider serviceProvider)
         {
             _context = serviceProvider.GetRequiredService<TodoContext.TodoContext>();
-            //_context = serviceProvider.GetService<TodoContext.TodoContext>();
         }
 
         public void SetFilters(Filters filters)
@@ -36,7 +34,7 @@ namespace TodoList.DataAccess
                 .Include(e => e.Executor.UserStatus)
                 .Include(p => p.TaskStatus)
                 .ToList();
-
+            // отдаю IQueryable с надеждой на будущие изменения
             var linqQuery = contextQuery
                 .OrderBy(e => keySelector(e))
                 .Where(e => predicate(e))
@@ -63,7 +61,7 @@ namespace TodoList.DataAccess
                 .Entries
                 .Include(p => p.TaskStatus)
                 .ToList();
-
+            // отдаю IQueryable с надеждой на будущие изменения
             var linqQuery = contextQuerry
                 .OrderBy(e => keySelector(e))
                 .Where(e => predicate(e))
@@ -76,13 +74,6 @@ namespace TodoList.DataAccess
         {
             var result = _context.Users.Find(id);
             return result;
-
-            //var result = _context
-            //    .Users
-            //    //.Where(u => u.UserId == id)
-            //    .Include(u => u.UserStatus)
-            //    .FirstOrDefault(u => u.UserId == id);
-            // return _context.Users.Find(id);
         }
 
         public IQueryable<UserEntity> GetAllUsers()
@@ -90,7 +81,6 @@ namespace TodoList.DataAccess
             return _context
                 .Users
                 .Include(s => s.UserStatus)
-                .Select(u => u)//????????????
                 .AsQueryable();
         }
 

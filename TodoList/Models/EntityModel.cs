@@ -72,25 +72,18 @@ namespace TodoList.Models
             return repo.GetAllProblemStatuses().ToList();
         }
 
-        // Работаем над Create
         public EntryEntity CreateEntry(EntryDto dto)
         {
             using var repo = _serviceScope.ServiceProvider.GetRequiredService<IRepository>();
-            var taskStatus = repo.GetProblemStatus((ProblemStatus)dto.TaskStatus.ProblemStatusId);
+            ProblemStatusEntity taskStatus = repo.GetProblemStatus((ProblemStatus)dto.TaskStatus.ProblemStatusId);
+            UserEntity user1 = repo.GetUser(dto.Initiator.UserId);
+            UserEntity user2 = repo.GetUser(dto.Executor.UserId);
             dto.TaskStatus = taskStatus;
-
-            //var user1 = repo.GetUser(dto.Initiator.UserId);
-            //var user2 = repo.GetUser(dto.Executor.UserId);
-            // так - не работает, надо к модели
-            //dto.Initiator = user1;
-            //dto.Executor = user1;
+            dto.Initiator = user1;
+            dto.Executor = user1;
 
             var model = EntryDto.ConvertFromDto(dto);
 
-            // так - работает
-            // почему????????????
-            model.Initiator = repo.GetUser(dto.Initiator.UserId);
-            model.Executor = repo.GetUser(dto.Executor.UserId);
             model.EntryId = 0;
 
             var result2 = repo.Create(model);
@@ -106,17 +99,14 @@ namespace TodoList.Models
             // TODO: обновляй только то, что необходимо (dbo.Entries)
             using var repo = _serviceScope.ServiceProvider.GetRequiredService<IRepository>();
 
-            var taskStatus = repo.GetProblemStatus((ProblemStatus)dto.TaskStatus.ProblemStatusId);
+            ProblemStatusEntity taskStatus = repo.GetProblemStatus((ProblemStatus)dto.TaskStatus.ProblemStatusId);
+            UserEntity user1 = repo.GetUser(dto.Initiator.UserId);
+            UserEntity user2 = repo.GetUser(dto.Executor.UserId);
             dto.TaskStatus = taskStatus;
-            // так - не работает, надо к модели
-            //var user1 = repo.GetUser(dto.Initiator.UserId);
-            //var user2 = repo.GetUser(dto.Executor.UserId);
+            dto.Initiator = user1;
+            dto.Executor = user1;
 
             EntryEntity model = EntryDto.ConvertFromDto(dto);
-            // так - работает
-            // почему????????????
-            model.Initiator = repo.GetUser(dto.Initiator.UserId);
-            model.Executor = repo.GetUser(dto.Executor.UserId);
 
             var result2 = repo.Update(model);
 
