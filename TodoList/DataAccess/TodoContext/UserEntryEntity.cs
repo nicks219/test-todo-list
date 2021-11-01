@@ -1,6 +1,9 @@
-﻿namespace TodoList.DataAccess.TodoContext
+﻿using System;
+
+namespace TodoList.DataAccess.TodoContext
 {
     /// Many-to-many на данный момент не нужно, но понадобится в дальнейшем
+    [Obsolete]
     public class UserEntryEntity
     {
         public int UserId { get; set; }

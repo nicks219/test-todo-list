@@ -11,6 +11,8 @@ namespace TodoList.DataAccess
 
         UserEntity GetUser(int id);
 
+        IQueryable<UserEntity> GetAllUsers();
+
         UserStatusEntity GetUserStatus(UserStatus userStatus);
 
         ProblemStatusEntity GetProblemStatus(ProblemStatus problemStatus);

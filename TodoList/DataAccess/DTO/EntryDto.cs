@@ -10,9 +10,8 @@ namespace TodoList.DataAccess.DTO
     public class EntryDto
     {
         /// Правила ролевого доступа
-        public List<ProblemStatus> ValidStatuses { get; set; }
-
-        public List<ActionStatus> ValidActions { get; set; }
+        //public List<ProblemStatus> ValidStatuses { get; set; }
+        //public List<ActionStatus> ValidActions { get; set; }
 
         /// Поля EntryEntity
         public int EntryId { get; set; }
@@ -38,6 +37,10 @@ namespace TodoList.DataAccess.DTO
 
         public int CurrentPage { get; set; }
 
+        // Необходим для десериализации
+        [JsonConstructor]
+        public EntryDto() {}
+
         public EntryDto(EntryEntity entry, int currentPage = 0)
         {
             EntryId = entry.EntryId;
@@ -53,13 +56,6 @@ namespace TodoList.DataAccess.DTO
             CurrentPage = currentPage;
         }
 
-        // Необходим для десериализации
-        [JsonConstructor]
-        public EntryDto()
-        {
-            Console.Write("!");
-        }
-
         public EntryDto(String message)
         {
             Title = message;
@@ -67,20 +63,19 @@ namespace TodoList.DataAccess.DTO
 
         internal static EntryEntity ConvertFromDto(EntryDto model)
         {
-            EntryEntity entryEntity = new EntryEntity();
-            
-            // тестовый уостыль: убери
-            var a = String.Empty;
-            entryEntity.CompletionDate = model.CompletionDate;
-            entryEntity.Deadline = model.Deadline;
-            entryEntity.Description = model.Description + a;
-            entryEntity.EntryId = model.EntryId;
-            entryEntity.Executor = model.Executor;
-            entryEntity.Initiator = model.Initiator;
-            entryEntity.Report = model.Report + a;
-            entryEntity.StartDate = model.StartDate;
-            entryEntity.TaskStatus = model.TaskStatus;
-            entryEntity.Title = model.Title + a;
+            EntryEntity entryEntity = new()
+            {
+                CompletionDate = model.CompletionDate,// DateTime никогда не равен null
+                Deadline = model.Deadline,//
+                Description = model.Description,
+                EntryId = model.EntryId,//
+                Executor = model.Executor,//
+                Initiator = model.Initiator,//
+                Report = model.Report,
+                StartDate = model.StartDate,//
+                TaskStatus = model.TaskStatus,//
+                Title = model.Title//
+            };
             return entryEntity;
         }
 

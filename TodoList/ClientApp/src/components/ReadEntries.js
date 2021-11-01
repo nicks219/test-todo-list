@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 export class ReadEntries extends Component {
     static displayName = ReadEntries.name;
     page = 0;
-    // костыль: 6 - отсутствие фильтрации на бэке
+    // костыль для старта: 6 - отсутствие фильтрации на бэке
     filter = 6;
 
     constructor(props) {
@@ -86,7 +86,7 @@ export class ReadEntries extends Component {
                             <tr>
                                 <th colSpan="2" scope="row">Description</th>
                                 <td colSpan="3" style={{ display: '' }}>
-                                    {backlog.description}
+                                    {backlog.description.substring(0, 80) + "..."}
                                 </td>
                                 <td>
                                     <Link to={{ pathname: '/update', propsState: backlog.entryId, fromReadComponent: this.page }}>
@@ -132,6 +132,7 @@ export class ReadEntries extends Component {
         const data = await response.json();
         
         if (data != null && data.length > 0) this.page = data[0].currentPage;
+
         this.setState({ backlog: data, loading: false });
     }
 

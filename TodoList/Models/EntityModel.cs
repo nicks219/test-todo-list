@@ -58,19 +58,49 @@ namespace TodoList.Models
         {
             using var repo = _serviceScope.ServiceProvider.GetRequiredService<IRepository>();
             return repo.CreateStubs();
-        }
+        } 
 
-        public bool CreateEntry(EntryEntity entry)
+        internal List<UserEntity> GetUsers()
         {
             using var repo = _serviceScope.ServiceProvider.GetRequiredService<IRepository>();
-            var result = repo.Create(entry);
-            return result != 0;
+            return repo.GetAllUsers().ToList();
         }
 
         internal List<ProblemStatusEntity> GetProblemStatuses()
         {
             using var repo = _serviceScope.ServiceProvider.GetRequiredService<IRepository>();
             return repo.GetAllProblemStatuses().ToList();
+        }
+
+        // Работаем над Create
+        public EntryEntity CreateEntry(EntryDto dto)
+        {
+            using var repo = _serviceScope.ServiceProvider.GetRequiredService<IRepository>();
+            var taskStatus = repo.GetProblemStatus((ProblemStatus)dto.TaskStatus.ProblemStatusId);
+            dto.TaskStatus = taskStatus;
+
+            var user = repo.GetUser(dto.Initiator.UserId);
+
+            //WARNING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+            // так - не работает:
+            //dto.Initiator = user1;
+            //dto.Executor = user1;
+
+            var model = EntryDto.ConvertFromDto(dto);
+
+            // так - работает
+            // почему????????????
+            // причем для update все работает
+            // EntryId = 0 нужен для create
+
+            model.Initiator = user;
+            model.Executor = user;
+            model.EntryId = 0;
+
+            var result2 = repo.Create(model);
+
+            var result = repo.GetEntry(model.EntryId);
+            return result;
         }
 
         internal EntryEntity UpdateEntry(EntryDto dto)

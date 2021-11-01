@@ -29,9 +29,17 @@ namespace TodoList.Controllers
         [HttpGet("[action]")]
         public ActionResult<EntryDto> OnGetEntry(int id = 1)
         {
-            using var scope = _serviceScopeFactory.CreateScope();
-            var result = new EntityModel(scope).GetEntry(id);
-            return EntryDto.ConvertToDto(result);
+            try
+            {
+                using var scope = _serviceScopeFactory.CreateScope();
+                var result = new EntityModel(scope).GetEntry(id);
+                return EntryDto.ConvertToDto(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "[EntryController: OnGetEntry]");
+                return EntryDto.Error("[EntryController: OnGetEntry]")[0];
+            }
         }
 
         [HttpGet("[action]")]
@@ -53,9 +61,34 @@ namespace TodoList.Controllers
         [HttpGet("[action]")]
         public ActionResult<List<ProblemStatusDto>> OnGetProblemStatuses()
         {
-            using var scope = _serviceScopeFactory.CreateScope();
-            var result = new EntityModel(scope).GetProblemStatuses();
-            return ProblemStatusDto.ConvertToDto(result);
+            try
+            {
+                using var scope = _serviceScopeFactory.CreateScope();
+                var result = new EntityModel(scope).GetProblemStatuses();
+                return ProblemStatusDto.ConvertToDto(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "[EntryController: OnGetProblemStatuses]");
+                return null;
+            }
+        }
+
+        // Для Create
+        [HttpGet("[action]")]
+        public ActionResult<List<UserDto>> OnGetUsers()
+        {
+            try
+            {
+                using var scope = _serviceScopeFactory.CreateScope();
+                var result = new EntityModel(scope).GetUsers();
+                return UserDto.ConvertToDto(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "[EntryController: OnGetProblemStatuses]");
+                return null;
+            }
         }
 
         /// Creates stubs
@@ -74,22 +107,22 @@ namespace TodoList.Controllers
             }
         }
 
+        // TODO: РАБОТАЕМ НАД CREATE
         [HttpPost("[action]")]
-        public bool? OnPostCreate([FromBody] EntryEntity model)
+        public ActionResult<EntryDto> OnPostCreate([FromBody] EntryDto dto)
         {
             try
             {
-                if (_rules.IsModelValid(model))
-                {
-                    using var scope = _serviceScopeFactory.CreateScope();
-                    return new EntityModel(scope).CreateEntry(model);
-                }
-                return false;
+                // найди куда IRules прикрутить - вовнутрь прокинь
+                //if (_rules.IsModelValid(model))
+                using var scope = _serviceScopeFactory.CreateScope();
+                var result = new EntityModel(scope).CreateEntry(dto);
+                return EntryDto.ConvertToDto(result);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "[EntryController: OnPostCreate]");
-                return null;
+                return new EntryDto();
             }
         }
 
@@ -98,15 +131,15 @@ namespace TodoList.Controllers
         {
             try
             {
+                // найди куда IRules прикрутить - вовнутрь прокинь
                 using var scope = _serviceScopeFactory.CreateScope();
                 var result = new EntityModel(scope).UpdateEntry(dto);
-
                 return EntryDto.ConvertToDto(result);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "[EntryController: OnPutUpdate]");
-                return null;
+                return new EntryDto();
             }
         }
     }

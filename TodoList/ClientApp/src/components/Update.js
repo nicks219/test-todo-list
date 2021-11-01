@@ -131,10 +131,10 @@ export class Update extends Component {
     }
 
     async putEntriesData() {
-        var item = { EntryId: 1 };
-        var requestBody = JSON.stringify(item);
-        requestBody = { "EntryId": 1 };
-        requestBody = JSON.stringify(this.state.backlog);
+        //var item = { EntryId: 1 };
+        //var requestBody = JSON.stringify(item);
+        //requestBody = { "EntryId": 1 };//???????????????????????????/
+        var requestBody = JSON.stringify(this.state.backlog);
 
         const response = await fetch('entry',
             { method: "PUT", headers: { 'Content-Type': "application/json;charset=utf-8" }, body: requestBody });
