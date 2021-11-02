@@ -25,7 +25,7 @@ export class Login extends Component {
         e.preventDefault();
         let userName = document.getElementById("name").value;
         // ЗАГЛУШКА: 
-        //userName = "Slame";
+        userName = "Slame";
         window.fetch(this.url + "?userName=" + String(userName))
             .then(response => response.ok ? this.loginOk(response) : console.log("Login error"));
     }
