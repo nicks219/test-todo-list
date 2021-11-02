@@ -12,6 +12,7 @@ using TodoList.DataAccess.TodoContext;
 using System.IO;
 using TodoList.Logger;
 using System;
+using TodoList.DataAccess.DTO;
 
 namespace TodoList
 {
@@ -98,6 +99,8 @@ namespace TodoList
             var dbContext = serviceScope.ServiceProvider.GetService<TodoContext>();
             //dbContext.Database.EnsureDeleted();
             dbContext.Database.EnsureCreated();
+            using var repo = serviceScope.ServiceProvider.GetRequiredService<IRepository>();
+            repo.CreateStubs();
         }
     }
 }

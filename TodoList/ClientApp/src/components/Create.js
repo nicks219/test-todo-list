@@ -147,7 +147,7 @@ export class Create extends Component {
 
         return (
             <div>
-                <h1 id="tabelLabel" >Backlog</h1>
+                <h1 id="tabelLabel" >Create</h1>
                 <p>This component is under development.</p>
                 {contents}
             </div>
@@ -158,6 +158,12 @@ export class Create extends Component {
     async getEntriesData() {
         const response = await fetch('entry/ongetentry?id=' + this.id);
         const data = await response.json();
+
+        // пустая бд - пока не знаю как лучше поступить
+        // но для Create это не должно вообще играть роли)
+        if (data.description === null) {
+            console.log("Seed DB please...");
+        }
 
         data.description = data.description.substring(0, 20);
         // ISO конвертится на стороне .NET

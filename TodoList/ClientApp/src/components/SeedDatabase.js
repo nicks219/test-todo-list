@@ -19,7 +19,7 @@ export class SeedDatabase extends Component {
     render() {
         return (
             <div>
-                <h1>Seeding counter</h1>
+                <h1>Seed Database</h1>
 
                 <p>Press this button to allow us to seed database.</p>
 

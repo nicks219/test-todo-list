@@ -124,7 +124,7 @@ export class Update extends Component {
 
         return (
             <div>
-                <h1 id="tabelLabel" >Backlog</h1>
+                <h1 id="tabelLabel" >Update</h1>
                 <p>This component is under development.</p>
                 {contents}
             </div>
@@ -134,6 +134,12 @@ export class Update extends Component {
     async getEntriesData() {
         const response = await fetch('entry/ongetentry?id=' + this.id);
         const data = await response.json();
+
+        // пустая бд - пока не знаю как лучше поступить
+        if (data.description === null) {
+            console.log("Seed DB please...");
+        }
+
         this.setState({ backlog: data, loading: false });
     }
 

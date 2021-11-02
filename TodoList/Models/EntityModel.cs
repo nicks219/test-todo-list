@@ -69,7 +69,8 @@ namespace TodoList.Models
         internal List<ProblemStatusEntity> GetProblemStatuses()
         {
             using var repo = _serviceScope.ServiceProvider.GetRequiredService<IRepository>();
-            return repo.GetAllProblemStatuses().ToList();
+            var result = repo.GetAllProblemStatuses().ToList();
+            return result;
         }
 
         public EntryEntity CreateEntry(EntryDto dto)

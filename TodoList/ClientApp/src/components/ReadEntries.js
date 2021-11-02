@@ -122,7 +122,7 @@ export class ReadEntries extends Component {
 
         return (
             <div>
-                <h1 id="tabelLabel" >Backlog</h1>
+                <h1 id="tabelLabel" >Todo List</h1>
                 <p>This component is under development.</p>
                 {contents}
             </div>

@@ -42,6 +42,8 @@ namespace TodoList.DataAccess.DTO
 
         public EntryDto(EntryEntity entry, int currentPage = 0)
         {
+            if (entry == null) return;
+            
             EntryId = entry.EntryId;
             Title = entry.Title;
             Description = entry.Description;
