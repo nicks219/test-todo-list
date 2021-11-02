@@ -86,6 +86,7 @@ namespace TodoList.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "[EntryController: OnGetProblemStatuses]");
+                // TODO: ???
                 return null;
             }
         }
@@ -96,11 +97,12 @@ namespace TodoList.Controllers
             try
             {
                 using var scope = _serviceScopeFactory.CreateScope();
-                return new EntityModel(scope).CreateStub();
+                return new EntityModel(scope).CreateEntryStub();
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "[EntryController: OnPostCreateStub]");
+                // TODO: ???
                 return null;
             }
         }
@@ -110,16 +112,14 @@ namespace TodoList.Controllers
         {
             try
             {
-                // TODO: найди, куда IRules прикрутить
-                // if (_rules.IsModelValid(model))
                 using var scope = _serviceScopeFactory.CreateScope();
-                var result = new EntityModel(scope).CreateEntry(dto);
+                var result = new EntityModel(scope, _rules).CreateEntry(dto);
                 return EntryDto.ConvertToDto(result);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "[EntryController: OnPostCreate]");
-                return new EntryDto();
+                return EntryDto.Error("[EntryController: OnPostCreate]")[0];
             }
         }
 
@@ -136,7 +136,7 @@ namespace TodoList.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "[EntryController: OnPutUpdate]");
-                return new EntryDto();
+                return EntryDto.Error("[EntryController: OnPutUpdate]")[0];
             }
         }
     }

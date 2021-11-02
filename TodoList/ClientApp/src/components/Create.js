@@ -94,6 +94,7 @@ export class Create extends Component {
                         <tr style={{ backgroundColor: this.checkValidity(backlog) === true ? "white" : this.expired }}>
                             <td>{backlog.title}</td>
                             <td>
+
                                 <select onChange={this.select} value={Number(this.state.backlog.initiator.userId - 1)} id={0}>
                                     {this.state.users.map((a, i) =>
                                         <option value={i} key={i.toString() + 'i'}>
@@ -101,14 +102,18 @@ export class Create extends Component {
                                         </option>
                                     )}
                                 </select>
+
                             </td>
-                            <td>{backlog.executor.name}</td>
                             <td>
-                                <DatePicker selected={this.state.date} onChange={(date) => this.setStartDate(date)}/>
+                                {backlog.executor.name}
+                            </td>
+                            <td>
+                                <DatePicker selected={this.state.date} onChange={(date) => this.setStartDate(date)} />
                             </td>
                             <td>{new Date(backlog.deadline).toDateString()}</td>
                             <td>{new Date(backlog.completionDate).toDateString()}</td>
                             <td>
+
                                 <select onChange={this.select} value={Number(backlog.taskStatus.problemStatusId - 1)} id={1}>
                                     {this.state.problemStatuses.map((a, i) =>
                                         <option value={i} key={i.toString()}>
@@ -116,13 +121,14 @@ export class Create extends Component {
                                         </option>
                                     )}
                                 </select>
+
                             </td>
                         </tr>
                         <tr>
                             <th colSpan="2" scope="row">Description</th>
                             <td colSpan="3" style={{ display: '' }}>
-                                <textarea id={8} value={backlog.description} cols={66} rows={8} onChange={this
-                                    .inputText} />
+                                <textarea id={8} value={backlog.description} cols={66} rows={8}
+                                    onChange={this.inputText} />
                             </td>
                         </tr>
                     </React.Fragment>
@@ -157,12 +163,10 @@ export class Create extends Component {
         const response = await fetch('entry/ongetentry?id=' + this.id);
         const data = await response.json();
 
-        // TODO: раздели создание статусов и заглушек-записей
         data.description = "";
         data.initiator = this.state.users[0];
         data.executor = this.state.users[0];
         data.taskStatus = this.state.problemStatuses[0];
-        //data.description = data.description.substring(0, 20);
         // ISO конвертится на стороне .NET
         data.startDate = this.state.date.toISOString();
         data.deadline = this.state.date.toISOString();
@@ -175,7 +179,16 @@ export class Create extends Component {
         const response = await fetch('entry/onpostcreate',
             { method: "POST", headers: { 'Content-Type': "application/json;charset=utf-8" }, body: requestBody });
         const data = await response.json();
-        this.setState({ backlog: data, loading: false });
+        // если Create не удался, но больше похоже на костыль
+        if (data.initiator === null) {
+            console.log("CREATE ABORTED");
+            const data2 = this.state.backlog;
+            data2.description = data.description;
+            this.setState({ backlog: data2, loading: false });
+        }
+        else {
+            this.setState({ backlog: data, loading: false });
+        }
     }
 
     async getProblemStatus() {

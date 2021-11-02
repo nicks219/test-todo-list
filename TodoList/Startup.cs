@@ -100,7 +100,7 @@ namespace TodoList
             //dbContext.Database.EnsureDeleted();
             dbContext.Database.EnsureCreated();
             using var repo = serviceScope.ServiceProvider.GetRequiredService<IRepository>();
-            repo.CreateStubs();
+            repo.CreateStatuses();
         }
     }
 }

@@ -15,10 +15,16 @@ namespace TodoList.Models
         private const int MinPage = 0;
         private const int NoFilter = 6;
         private readonly IServiceScope _serviceScope;
+        private readonly IRules _rules;
 
         public EntityModel(IServiceScope serviceScope)
         {
             _serviceScope = serviceScope;
+        }
+
+        public EntityModel(IServiceScope serviceScope, IRules rules) : this(serviceScope)
+        {
+            this._rules = rules;
         }
 
         public EntryEntity GetEntry(int id)
@@ -54,10 +60,10 @@ namespace TodoList.Models
             return result;
         }
 
-        public bool CreateStub()
+        public bool CreateEntryStub()
         {
             using var repo = _serviceScope.ServiceProvider.GetRequiredService<IRepository>();
-            return repo.CreateStubs();
+            return repo.CreateEntryStub();
         }
 
         internal List<UserEntity> GetUsers()
@@ -85,12 +91,17 @@ namespace TodoList.Models
 
             EntryEntity model = EntryDto.ConvertFromDto(dto);
 
-            model.EntryId = 0;
+            if (_rules != null && _rules.IsModelValid(model))
+            {
+                model.EntryId = 0;
 
-            repo.Create(model);
+                repo.Create(model);
 
-            var result = repo.GetEntry(model.EntryId);
-            return result;
+                var result = repo.GetEntry(model.EntryId);
+                return result;
+            }
+
+            return EntryDto.ConvertFromDto(EntryDto.Error("[Create: Wrong arguments]")[0]);
         }
 
         internal EntryEntity UpdateEntry(EntryDto dto)

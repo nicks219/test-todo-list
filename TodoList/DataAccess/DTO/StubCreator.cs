@@ -14,70 +14,61 @@ namespace TodoList.DataAccess.DTO
             "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit " +
             "anim id est laborum.";
 
-        public static bool CreateStubs(this IRepository repo)
+        public static bool CreateEntryStub(this IRepository repo)
         {
-            // TODO: раздели создание статусов и заглушек-записей
-            // должно создаваться один раз
+            var user1 = repo.GetUser(1);
+            var user2 = repo.GetUser(2);
+            var status1 = repo.GetProblemStatus(ProblemStatus.Closed);
+
+            int count = 1;
+            while (count-- != 0)
+            {
+                var date = DateTime.Now;
+                var entry1 = new EntryEntity()
+                {
+                    Initiator = user1,
+                    Executor = user2,
+                    Deadline = date,
+                    CompletionDate = date,
+                    StartDate = date,
+                    Title = "Next Task",
+                    Description = LorenIpsum,
+                    TaskStatus = status1
+                };
+                repo.Create(entry1);
+            }
+
+            return true;
+        }
+
+        public static void CreateStatuses(this IRepository repo)
+        {
             if (!repo.StatusExist())
             {
                 foreach (var status in Enum.GetNames(typeof(UserStatus)))
                 {
                     //var us = (UserStatus)Enum.Parse(typeof(UserStatus), status);
-                    //repo.CreateUserStatus(new UserStatusEntity()
                     repo.Create(new UserStatusEntity()
-                        { UserStatusName = status });
+                    { UserStatusName = status });
                 }
 
                 foreach (var status in Enum.GetNames(typeof(ProblemStatus)))
                 {
-                    //var ps = (ProblemStatus)Enum.Parse(typeof(ProblemStatus), status);
-                    //repo.CreateProblemStatus(new ProblemStatusEntity()
                     repo.Create(new ProblemStatusEntity()
-                        { ProblemStatusName = status });
+                    { ProblemStatusName = status });
                 }
 
-                //var result1 = repo.CreateUser(new UserEntity()
                 repo.Create(new UserEntity()
                 {
                     Name = "John",
                     UserStatus = repo.GetUserStatus(UserStatus.Initiator)
                 });
-                //var result2 = repo.CreateUser(new UserEntity()
                 repo.Create(new UserEntity()
                 {
                     Name = "Slame",
                     UserStatus = repo.GetUserStatus(UserStatus.Executor)
                 });
             }
-
-            // TODO: раздели создание статусов и заглушек-записей
-            //if (!repo.StatusExist())
-            {
-                var user1 = repo.GetUser(1);
-                var user2 = repo.GetUser(2);
-                var status1 = repo.GetProblemStatus(ProblemStatus.Closed);
-
-                //repo.CreateEntry(entry);
-                int count = 1;
-                while (count-- != 0)
-                {
-                    var date = DateTime.Now;
-                    var entry1 = new EntryEntity()
-                    {
-                        Initiator = user1,
-                        Executor = user2,
-                        Deadline = date,
-                        CompletionDate = date,
-                        StartDate = date,
-                        Title = "Next Task",
-                        Description = LorenIpsum,
-                        TaskStatus = status1
-                    };
-                    repo.Create(entry1);
-                }
-            }
-
-            return true;
         }
     }
 }

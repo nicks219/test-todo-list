@@ -59,7 +59,7 @@ namespace TodoList.DataAccess.DTO
 
         public EntryDto(String message)
         {
-            Title = message;
+            Description = message;
         }
 
         internal static EntryEntity ConvertFromDto(EntryDto model)
