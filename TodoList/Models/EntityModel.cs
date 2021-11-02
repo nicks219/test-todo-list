@@ -81,6 +81,11 @@ namespace TodoList.Models
 
         public EntryEntity CreateEntry(EntryDto dto)
         {
+            if (dto.Initiator == null || dto.Executor == null || dto.TaskStatus == null) 
+            {
+                return EntryDto.ConvertFromDto(EntryDto.Error("[Create: Undefined dto, please reload your browser page]")[0]);
+            }
+
             using var repo = _serviceScope.ServiceProvider.GetRequiredService<IRepository>();
             ProblemStatusEntity taskStatus = repo.GetProblemStatus((ProblemStatus)dto.TaskStatus.ProblemStatusId);
             UserEntity user1 = repo.GetUser(dto.Initiator.UserId);
@@ -104,6 +109,11 @@ namespace TodoList.Models
 
         internal EntryEntity UpdateEntry(EntryDto dto)
         {
+            if (dto.Initiator == null || dto.Executor == null || dto.TaskStatus == null)
+            {
+                return EntryDto.ConvertFromDto(EntryDto.Error("[Update: Undefined dto, please reload your browser page]")[0]);
+            }
+
             // TODO: ты обновляешь все связанные таблицы (dbo.ProblemStatus)
             // потому приходится вставлять в них new сущности (стр.99) и менять в них поля
             // TODO: обновляй только то, что необходимо (dbo.Entries)

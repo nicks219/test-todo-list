@@ -102,17 +102,22 @@ export class Create extends Component {
                             <td>{backlog.title}</td>
                             <td>
 
-                                <select onChange={this.select} value={Number(this.state.backlog.initiator.userId - 1)} id={0}>
-                                    {this.state.users.map((a, i) =>
-                                        <option value={i} key={i.toString() + 'i'}>
-                                            {a.name}
-                                        </option>
-                                    )}
-                                </select>
+                                {/*TODO: если ситуация такая, что getStatus или getUsers получили undefined, то надо вызывать их заново*/}
+                                {/*TODO: делай бэк асинхронным - эту ошибку сложно вызвать*/}
+                                
+                                {this.state.backlog.initiator !== undefined ?
+                                    <select onChange={this.select} value={Number(this.state.backlog.initiator.userId - 1)} id={0}>
+                                        {this.state.users.map((a, i) =>
+                                            <option value={i} key={i.toString() + 'i'}>
+                                                {a.name}
+                                            </option>
+                                        )}
+                                    </select> : <div></div>
+                                }
 
                             </td>
                             <td>
-                                {backlog.executor.name}
+                                {this.state.executor !== undefined ? backlog.executor.name : '' }
                             </td>
                             <td>
                                 <DatePicker selected={this.state.date} onChange={(date) => this.setStartDate(date)} />
@@ -121,14 +126,14 @@ export class Create extends Component {
                             <td>{new Date(backlog.completionDate).toDateString()}</td>
                             <td>
 
-                                {backlog.taskStatus !== null ?
+                                {backlog.taskStatus !== undefined ?
                                     <select onChange={this.select} value={Number(backlog.taskStatus.problemStatusId - 1)} id={1}>
                                         {this.state.problemStatuses.map((a, i) =>
                                             <option value={i} key={i.toString()}>
                                                 {a.problemStatusName}
                                             </option>
                                         )}
-                                    </select> : {}
+                                    </select> : <div></div>
                                 }
 
                             </td>
