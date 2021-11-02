@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using RandomSongSearchEngine.Dto;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -149,6 +150,12 @@ namespace TodoList.DataAccess
             return _context.ProblemStatus
                 .Select(s => s)
                 .AsNoTracking();
+        }
+
+        public UserEntity GetUser(LoginDto login)
+        {
+            return _context.Users
+                .FirstOrDefault(u => u.Name == login.UserName);
         }
     }
 }

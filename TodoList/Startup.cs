@@ -13,6 +13,8 @@ using System.IO;
 using TodoList.Logger;
 using System;
 using TodoList.DataAccess.DTO;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 
 namespace TodoList
 {
@@ -43,6 +45,12 @@ namespace TodoList
             // Views и папка Pages оставлены для вывода стэк-трейса в окно браузера на период разработки
             services.AddControllersWithViews();
             //services.AddControllers();
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    // путь авторизации для [Authorize] контроллеров
+                    options.LoginPath = new PathString("/Account/Login/");
+                });
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -72,6 +80,9 @@ namespace TodoList
             app.UseSpaStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

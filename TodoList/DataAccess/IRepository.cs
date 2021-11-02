@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RandomSongSearchEngine.Dto;
+using System;
 using System.Linq;
 using TodoList.BuisnesProcess;
 using TodoList.DataAccess.TodoContext;
@@ -10,6 +11,8 @@ namespace TodoList.DataAccess
         EntryEntity GetEntry(int id);
 
         UserEntity GetUser(int id);
+
+        UserEntity GetUser(LoginDto login);
 
         IQueryable<UserEntity> GetAllUsers();
 

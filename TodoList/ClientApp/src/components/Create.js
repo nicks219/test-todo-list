@@ -121,13 +121,15 @@ export class Create extends Component {
                             <td>{new Date(backlog.completionDate).toDateString()}</td>
                             <td>
 
-                                <select onChange={this.select} value={Number(backlog.taskStatus.problemStatusId - 1)} id={1}>
-                                    {this.state.problemStatuses.map((a, i) =>
-                                        <option value={i} key={i.toString()}>
-                                            {a.problemStatusName}
-                                        </option>
-                                    )}
-                                </select>
+                                {backlog.taskStatus !== null ?
+                                    <select onChange={this.select} value={Number(backlog.taskStatus.problemStatusId - 1)} id={1}>
+                                        {this.state.problemStatuses.map((a, i) =>
+                                            <option value={i} key={i.toString()}>
+                                                {a.problemStatusName}
+                                            </option>
+                                        )}
+                                    </select> : {}
+                                }
 
                             </td>
                         </tr>
@@ -187,7 +189,13 @@ export class Create extends Component {
         var requestBody = JSON.stringify(this.state.backlog);
         const response = await fetch('entry/onpostcreate',
             { method: "POST", headers: { 'Content-Type': "application/json;charset=utf-8" }, body: requestBody });
-        const data = await response.json();
+
+        if (response.redirected === true) {
+            console.log('Login please');
+            return;
+        }
+         const data = await response.json();
+
         // если Create не удался, но больше похоже на костыль
         if (data.initiator === null) {
             console.log("CREATE ABORTED");

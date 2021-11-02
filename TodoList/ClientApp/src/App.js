@@ -5,6 +5,7 @@ import { ReadEntries } from './components/ReadEntries';
 import { SeedDatabase } from './components/SeedDatabase';
 import { Create } from './components/Create';
 import { Update } from './components/Update';
+import { Login } from './components/Login';
 
 import './custom.css'
 
@@ -18,6 +19,7 @@ export default class App extends Component {
                 <Route path='/update' component={Update} />
                 <Route path='/seed-db' component={SeedDatabase} />
                 <Route path='/get-entries' component={Create} />
+                <Route path='/login' component={Login} />
             </Layout>
         );
     }
