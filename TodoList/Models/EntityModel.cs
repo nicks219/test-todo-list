@@ -94,9 +94,7 @@ namespace TodoList.Models
             if (_rules != null && _rules.IsModelValid(model))
             {
                 model.EntryId = 0;
-
                 repo.Create(model);
-
                 var result = repo.GetEntry(model.EntryId);
                 return result;
             }
@@ -120,10 +118,14 @@ namespace TodoList.Models
 
             EntryEntity model = EntryDto.ConvertFromDto(dto);
 
-            repo.Update(model);
+            if (_rules != null && _rules.IsModelValid(model))
+            {
+                repo.Update(model);
+                var result = repo.GetEntry(model.EntryId);
+                return result;
+            }
 
-            var result = repo.GetEntry(model.EntryId);
-            return result;
+            return EntryDto.ConvertFromDto(EntryDto.Error("[Update: Wrong arguments]")[0]);
         }
 
         private static int FixPageNumber(int currentPage, int entriesCount)

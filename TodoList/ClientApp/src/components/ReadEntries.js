@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 export class ReadEntries extends Component {
     static displayName = ReadEntries.name;
 
+    mounted = false;
+
     page = 0;
 
     expired = "#333333";
@@ -19,6 +21,11 @@ export class ReadEntries extends Component {
     componentDidMount() {
         this.getProblemStatus();
         this.getEntriesData();
+        this.mounted = true;
+    }
+
+    componentWillUnmount() {
+        this.mounted = false;
     }
 
     back = () => {
@@ -141,12 +148,12 @@ export class ReadEntries extends Component {
 
         if (data != null && data.length > 0) this.page = data[0].currentPage;
 
-        this.setState({ backlog: data, loading: false });
+        if (this.mounted) this.setState({ backlog: data, loading: false });
     }
 
     async getProblemStatus() {
         const response = await fetch('entry/ongetproblemstatuses');
         const data = await response.json();
-        this.setState({ problemStatuses: data });
+        if (this.mounted) this.setState({ problemStatuses: data });
     }
 }

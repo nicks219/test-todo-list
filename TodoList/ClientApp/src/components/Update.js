@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 export class Update extends Component {
     static displayName = Update.name;
 
+    mounted = false;
+
     id = 0;
 
     page = 0;
@@ -25,6 +27,11 @@ export class Update extends Component {
     componentDidMount() {
         this.getProblemStatus();
         this.getEntriesData();
+        this.mounted = true;
+    }
+
+    componentWillUnmount() {
+        this.mounted = false;
     }
 
     update = () => {
@@ -141,7 +148,7 @@ export class Update extends Component {
             console.log("Seed DB please...");
         }
 
-        this.setState({ backlog: data, loading: false });
+        if (this.mounted) this.setState({ backlog: data, loading: false });
     }
 
     async putEntriesData() {
@@ -149,12 +156,21 @@ export class Update extends Component {
         const response = await fetch('entry',
             { method: "PUT", headers: { 'Content-Type': "application/json;charset=utf-8" }, body: requestBody });
         const data = await response.json();
-        this.setState({ backlog: data, loading: false });
+        // если Update не удался, но больше похоже на костыль
+        if (data.initiator === null) {
+            console.log("CREATE ABORTED");
+            const data2 = this.state.backlog;
+            data2.description = data.description;
+            if (this.mounted) this.setState({ backlog: data2, loading: false });
+        }
+        else {
+            if (this.mounted) this.setState({ backlog: data, loading: false });
+        }
     }
 
     async getProblemStatus() {
         const response = await fetch('entry/ongetproblemstatuses');
         const data = await response.json();
-        this.setState({ problemStatuses: data });
+        if (this.mounted) this.setState({ problemStatuses: data });
     }
 }

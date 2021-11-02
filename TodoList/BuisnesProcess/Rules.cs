@@ -20,6 +20,7 @@ namespace TodoList.BuisnesProcess
 
         public bool IsModelValid(EntryEntity entry)
         {
+            // TODO: на поле Report повешен костыль в EntryDto, реально оно не обрабатывается
             if (string.IsNullOrEmpty(entry.Title) || string.IsNullOrEmpty(entry.Report)) return false;
 
             if (string.IsNullOrEmpty(entry.Description)) return false;

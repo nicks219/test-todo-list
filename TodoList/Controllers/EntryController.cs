@@ -130,7 +130,7 @@ namespace TodoList.Controllers
             {
                 // найди куда IRules прикрутить - вовнутрь прокинь
                 using var scope = _serviceScopeFactory.CreateScope();
-                var result = new EntityModel(scope).UpdateEntry(dto);
+                var result = new EntityModel(scope, _rules).UpdateEntry(dto);
                 return EntryDto.ConvertToDto(result);
             }
             catch (Exception ex)

@@ -13,6 +13,8 @@ const Example = () => {
 export class Create extends Component {
     static displayName = Create.name;
 
+    mounted = false;
+
     id = 0;
 
     page = 0;
@@ -35,6 +37,11 @@ export class Create extends Component {
         this.getProblemStatus();
         this.getUsers();
         this.getEntriesData();
+        this.mounted = true;
+    }
+
+    componentWillUnmount() {
+        this.mounted = false;
     }
 
     create = () => {
@@ -159,6 +166,8 @@ export class Create extends Component {
         );
     }
 
+    // TODO: перед setState проверяй, смонтирован ли компонент !!!!!
+
     async getEntriesData() {
         const response = await fetch('entry/ongetentry?id=' + this.id);
         const data = await response.json();
@@ -171,7 +180,7 @@ export class Create extends Component {
         data.startDate = this.state.date.toISOString();
         data.deadline = this.state.date.toISOString();
 
-        this.setState({ backlog: data, loading: false });
+        if (this.mounted) this.setState({ backlog: data, loading: false });
     }
 
     async postEntriesData() {
@@ -184,22 +193,22 @@ export class Create extends Component {
             console.log("CREATE ABORTED");
             const data2 = this.state.backlog;
             data2.description = data.description;
-            this.setState({ backlog: data2, loading: false });
+            if (this.mounted) this.setState({ backlog: data2, loading: false });
         }
         else {
-            this.setState({ backlog: data, loading: false });
+            if (this.mounted) this.setState({ backlog: data, loading: false });
         }
     }
 
     async getProblemStatus() {
         const response = await fetch('entry/ongetproblemstatuses');
         const data = await response.json();
-        this.setState({ problemStatuses: data });
+        if (this.mounted) this.setState({ problemStatuses: data });
     }
 
     async getUsers() {
         const response = await fetch('entry/ongetusers');
         const data = await response.json();
-        this.setState({ users: data });
+        if (this.mounted) this.setState({ users: data });
     }
 }

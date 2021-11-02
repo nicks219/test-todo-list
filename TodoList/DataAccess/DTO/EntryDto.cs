@@ -64,6 +64,7 @@ namespace TodoList.DataAccess.DTO
 
         internal static EntryEntity ConvertFromDto(EntryDto model)
         {
+            // TODO: убери костыль
             EntryEntity entryEntity = new()
             {
                 CompletionDate = model.CompletionDate,
@@ -72,7 +73,7 @@ namespace TodoList.DataAccess.DTO
                 EntryId = model.EntryId,
                 Executor = model.Executor,
                 Initiator = model.Initiator,
-                Report = model.Report,
+                Report = "костыль", // TODO: model.Report,
                 StartDate = model.StartDate,
                 TaskStatus = model.TaskStatus,
                 Title = model.Title
