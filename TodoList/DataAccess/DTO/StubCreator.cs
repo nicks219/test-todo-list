@@ -16,6 +16,7 @@ namespace TodoList.DataAccess.DTO
 
         public static bool CreateStubs(this IRepository repo)
         {
+            // TODO: раздели создание статусов и заглушек-записей
             // должно создаваться один раз
             if (!repo.StatusExist())
             {
@@ -49,14 +50,15 @@ namespace TodoList.DataAccess.DTO
                 });
             }
 
-            if (!repo.StatusExist())
+            // TODO: раздели создание статусов и заглушек-записей
+            //if (!repo.StatusExist())
             {
                 var user1 = repo.GetUser(1);
                 var user2 = repo.GetUser(2);
                 var status1 = repo.GetProblemStatus(ProblemStatus.Closed);
 
                 //repo.CreateEntry(entry);
-                int count = 2;
+                int count = 1;
                 while (count-- != 0)
                 {
                     var date = DateTime.Now;

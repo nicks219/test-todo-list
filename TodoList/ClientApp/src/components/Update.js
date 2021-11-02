@@ -136,6 +136,7 @@ export class Update extends Component {
         const data = await response.json();
 
         // пустая бд - пока не знаю как лучше поступить
+        // убирай из меню Update
         if (data.description === null) {
             console.log("Seed DB please...");
         }

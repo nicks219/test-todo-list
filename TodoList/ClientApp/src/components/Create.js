@@ -34,7 +34,6 @@ export class Create extends Component {
     componentDidMount() {
         this.getProblemStatus();
         this.getUsers();
-        // нам надо начинать с "пустой" сущности
         this.getEntriesData();
     }
 
@@ -154,18 +153,16 @@ export class Create extends Component {
         );
     }
 
-    // надо начинать с "пустой" сущности
     async getEntriesData() {
         const response = await fetch('entry/ongetentry?id=' + this.id);
         const data = await response.json();
 
-        // пустая бд - пока не знаю как лучше поступить
-        // но для Create это не должно вообще играть роли)
-        if (data.description === null) {
-            console.log("Seed DB please...");
-        }
-
-        data.description = data.description.substring(0, 20);
+        // TODO: раздели создание статусов и заглушек-записей
+        data.description = "";
+        data.initiator = this.state.users[0];
+        data.executor = this.state.users[0];
+        data.taskStatus = this.state.problemStatuses[0];
+        //data.description = data.description.substring(0, 20);
         // ISO конвертится на стороне .NET
         data.startDate = this.state.date.toISOString();
         data.deadline = this.state.date.toISOString();
