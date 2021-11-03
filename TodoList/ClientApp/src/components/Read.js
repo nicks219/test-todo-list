@@ -51,6 +51,32 @@ export class Read extends Component {
         return false;
     }
 
+    async getEntriesData() {
+
+        if (this.props.location.fromUpdateComponent != undefined) {
+            this.page = this.props.location.fromUpdateComponent;
+            this.filter = this.props.location.filter;
+            this.props.location.fromUpdateComponent = undefined;
+        }
+
+        const response = await fetch('entry/ongetpage?page=' + this.page + "&filter=" + this.filter);
+        const data = await response.json();
+        if (data != null && data.length > 0) {
+            this.page = data[0].currentPage;
+        }
+
+        if (this.mounted) {
+            this.setState({ backlog: data, loading: false });
+        }
+    }
+
+    render() {
+
+        return (
+            <RenderContent component={this} />
+        );
+    }
+
     renderBacklogTable(backlog) {
 
         return (
@@ -97,32 +123,6 @@ export class Read extends Component {
                 </tbody>
             </table>
         );
-    }
-
-    render() {
-
-        return (
-            <RenderContent component={this} />
-        );
-    }
-
-    async getEntriesData() {
-
-        if (this.props.location.fromUpdateComponent != undefined) {
-            this.page = this.props.location.fromUpdateComponent;
-            this.filter = this.props.location.filter;
-            this.props.location.fromUpdateComponent = undefined;
-        }
-
-        const response = await fetch('entry/ongetpage?page=' + this.page + "&filter=" + this.filter);
-        const data = await response.json();
-        if (data != null && data.length > 0) {
-            this.page = data[0].currentPage;
-        }
-
-        if (this.mounted) {
-            this.setState({ backlog: data, loading: false });
-        }
     }
 }
 

@@ -54,6 +54,53 @@ export class Update extends Component {
         return false;
     }
 
+    inputText = (e) => {
+
+        const newText = e.target.value;
+        const data = this.state.backlog;
+        data.description = newText;
+        this.setState({ backlog: data });
+    }
+
+    async getEntriesData() {
+
+        const response = await fetch('entry/ongetentry?id=' + this.id);
+        const data = await response.json();
+        if (data.description === null) {
+            console.log("Seed DB please...");
+        }
+
+        if (this.mounted) {
+            this.setState({ backlog: data, loading: false });
+        }
+    }
+
+    async putEntriesData() {
+
+        var requestBody = JSON.stringify(this.state.backlog);
+        const response = await fetch('entry',
+            { method: "PUT", headers: { 'Content-Type': "application/json;charset=utf-8" }, body: requestBody });
+        const data = await response.json();
+        if (data.initiator === null) {
+            console.log("UPDATE ABORTED");
+            const data2 = this.state.backlog;
+            data2.description = data.description;
+            if (this.mounted) {
+                this.setState({ backlog: data2, loading: false });
+            }
+        }
+        else if (this.mounted) {
+            this.setState({ backlog: data, loading: false });
+        }
+    }
+
+    render() {
+
+        return (
+            <RenderContent component={this} />
+        );
+    }
+
     renderBacklogTable(backlog) {
 
         return (
@@ -97,52 +144,5 @@ export class Update extends Component {
                 </tbody>
             </table>
         );
-    }
-
-    inputText = (e) => {
-
-        const newText = e.target.value;
-        const data = this.state.backlog;
-        data.description = newText;
-        this.setState({ backlog: data });
-    }
-
-    render() {
-
-        return (
-            <RenderContent component={this} />
-        );
-    }
-
-    async getEntriesData() {
-
-        const response = await fetch('entry/ongetentry?id=' + this.id);
-        const data = await response.json();
-        if (data.description === null) {
-            console.log("Seed DB please...");
-        }
-
-        if (this.mounted) {
-            this.setState({ backlog: data, loading: false });
-        }
-    }
-
-    async putEntriesData() {
-
-        var requestBody = JSON.stringify(this.state.backlog);
-        const response = await fetch('entry',
-            { method: "PUT", headers: { 'Content-Type': "application/json;charset=utf-8" }, body: requestBody });
-        const data = await response.json();
-        if (data.initiator === null) {
-            console.log("UPDATE ABORTED");
-            const data2 = this.state.backlog;
-            data2.description = data.description;
-            if (this.mounted) {
-                this.setState({ backlog: data2, loading: false });
-            }
-        }
-        else if (this.mounted) {
-            this.setState({ backlog: data, loading: false });
-        }
     }
 }

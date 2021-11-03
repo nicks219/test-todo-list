@@ -72,6 +72,66 @@ export class Create extends Component {
         this.setState({ date: dt, backlog: data });
     }
 
+    inputText = (e) => {
+
+        const newText = e.target.value;
+        const data = this.state.backlog;
+        data.description = newText;
+        this.setState({ backlog: data });
+    }
+
+    async getEntriesData() {
+
+        const response = await fetch('entry/ongetentry?id=' + this.id);
+        const data = await response.json();
+        data.description = "";
+        data.initiator = this.state.users[0];
+        data.executor = this.state.users[0];
+        data.taskStatus = this.state.problemStatuses[0];
+        data.startDate = this.state.date.toISOString();
+        data.deadline = this.state.date.toISOString();
+        if (this.mounted) {
+            this.setState({ backlog: data, loading: false });
+        }
+    }
+
+    async postEntriesData() {
+
+        var requestBody = JSON.stringify(this.state.backlog);
+        const response = await fetch('entry/onpostcreate',
+            { method: "POST", headers: { 'Content-Type': "application/json;charset=utf-8" }, body: requestBody });
+        if (response.redirected === true) {
+            console.log('Login please');
+            const data = this.state.backlog;
+            data.description = 'Login please';
+            if (this.mounted) {
+                this.setState({ backlog: data, loading: false });
+            }
+
+            return;
+        }
+
+        const data = await response.json();
+        if (data.initiator === null) {
+            console.log("CREATE ABORTED");
+            const data2 = this.state.backlog;
+            data2.description = data.description;
+            if (this.mounted) {
+                this.setState({ backlog: data2, loading: false });
+            }
+        }
+        else if (this.mounted) {
+            this.setState({ backlog: data, loading: false });
+        }
+    }
+
+    render() {
+
+        return (
+            <RenderContent component={this} />
+        );
+    }
+
     renderBacklogTable(backlog) {
 
         return (
@@ -118,66 +178,6 @@ export class Create extends Component {
                 </tbody>
             </table>
         );
-    }
-
-    inputText = (e) => {
-
-        const newText = e.target.value;
-        const data = this.state.backlog;
-        data.description = newText;
-        this.setState({ backlog: data });
-    }
-
-    render() {
-
-        return (
-            <RenderContent component={this} />
-        );
-    }
-
-    async getEntriesData() {
-        
-        const response = await fetch('entry/ongetentry?id=' + this.id);
-        const data = await response.json();
-        data.description = "";
-        data.initiator = this.state.users[0];
-        data.executor = this.state.users[0];
-        data.taskStatus = this.state.problemStatuses[0];
-        data.startDate = this.state.date.toISOString();
-        data.deadline = this.state.date.toISOString();
-        if (this.mounted) {
-            this.setState({ backlog: data, loading: false });
-        }
-    }
-
-    async postEntriesData() {
-
-        var requestBody = JSON.stringify(this.state.backlog);
-        const response = await fetch('entry/onpostcreate',
-            { method: "POST", headers: { 'Content-Type': "application/json;charset=utf-8" }, body: requestBody });
-        if (response.redirected === true) {
-            console.log('Login please');
-            const data = this.state.backlog;
-            data.description = 'Login please';
-            if (this.mounted) {
-                this.setState({ backlog: data, loading: false });
-            }
-
-            return;
-        }
-
-        const data = await response.json();
-        if (data.initiator === null) {
-            console.log("CREATE ABORTED");
-            const data2 = this.state.backlog;
-            data2.description = data.description;
-            if (this.mounted) {
-                this.setState({ backlog: data2, loading: false });
-            }
-        }
-        else if (this.mounted) {
-            this.setState({ backlog: data, loading: false });
-        }
     }
 }
 
