@@ -12,3 +12,7 @@ export const Select = ({ select, value, list, id }) => {
         </select>
     );
 }
+
+export function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}

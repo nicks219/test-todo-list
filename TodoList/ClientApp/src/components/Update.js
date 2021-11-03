@@ -1,10 +1,11 @@
 ﻿import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { Select } from './Select';
 
 export class Update extends Component {
     static displayName = Update.name;
 
-    mounted = false;
+    mounted = true;
 
     id = 0;
 
@@ -24,9 +25,9 @@ export class Update extends Component {
         }
     }
 
-    componentDidMount() {
-        this.getProblemStatus();
-        this.getEntriesData();
+    async componentDidMount() {
+        await this.getProblemStatus();
+        await this.getEntriesData();
         this.mounted = true;
     }
 

@@ -16,7 +16,7 @@ const Example = () => {
 export class Create extends Component {
     static displayName = Create.name;
 
-    mounted = false;
+    mounted = true;
 
     id = 0;
 
@@ -36,10 +36,10 @@ export class Create extends Component {
         }
     }
 
-    componentDidMount() {
-        this.getProblemStatus();
-        this.getUsers();
-        this.getEntriesData();
+    async componentDidMount() {
+        await this.getProblemStatus();
+        await this.getUsers();
+        await this.getEntriesData();
         this.mounted = true;
     }
 
@@ -105,8 +105,7 @@ export class Create extends Component {
                         <tr style={{ backgroundColor: this.checkValidity(backlog) === true ? "white" : this.expired }}>
                             <td>{backlog.title}</td>
                             <td>
-                                {/* TODO: getStatus или getUsers могут вернуть undefined - надо вызывать их заново */}
-                                {/* TODO: или делай бэк асинхронным - эту ошибку сложно вызвать, или я что-то криво сделал */}
+                                {/*// TODO: можно убрать проверку*/}
                                 {backlog.initiator !== undefined ?
                                     <Select select={this.select} value={backlog.initiator.userId} list={this.state.users} id={0} />
                                     : <div></div>
@@ -121,6 +120,7 @@ export class Create extends Component {
                             <td>{new Date(backlog.deadline).toDateString()}</td>
                             <td>{new Date(backlog.completionDate).toDateString()}</td>
                             <td>
+                                {/*// TODO: можно убрать проверку*/}
                                 {backlog.taskStatus !== undefined ?
                                     <Select select={this.select} value={backlog.taskStatus.problemStatusId} list={this.state.problemStatuses} id={1} />
                                     : <div></div>
@@ -163,6 +163,7 @@ export class Create extends Component {
     }
 
     async getEntriesData() {
+        // NB: что именно я вообще запрашиваю с бэка?
         const response = await fetch('entry/ongetentry?id=' + this.id);
         const data = await response.json();
 

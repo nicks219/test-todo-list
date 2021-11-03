@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { Select } from './Select';
 
-export class ReadEntries extends Component {
-    static displayName = ReadEntries.name;
+export class Read extends Component {
+    static displayName = Read.name;
 
-    mounted = false;
+    mounted = true;
 
     page = 0;
 
@@ -18,9 +19,9 @@ export class ReadEntries extends Component {
         this.state = { backlog: [], problemStatuses: [], loading: true };
     }
 
-    componentDidMount() {
-        this.getProblemStatus();
-        this.getEntriesData();
+    async componentDidMount() {
+        await this.getProblemStatus();
+        await this.getEntriesData();
         this.mounted = true;
     }
 

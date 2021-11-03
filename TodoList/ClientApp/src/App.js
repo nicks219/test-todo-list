@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router';
 import { Layout } from './components/Layout';
-import { ReadEntries } from './components/ReadEntries';
+import { Read } from './components/Read';
 import { SeedDatabase } from './components/SeedDatabase';
 import { Create } from './components/Create';
 import { Update } from './components/Update';
@@ -15,7 +15,7 @@ export default class App extends Component {
     render() {
         return (
             <Layout>
-                <Route exact path='/' component={ReadEntries} />
+                <Route exact path='/' component={Read} />
                 <Route path='/update' component={Update} />
                 <Route path='/seed-db' component={SeedDatabase} />
                 <Route path='/get-entries' component={Create} />
