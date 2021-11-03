@@ -32,12 +32,10 @@ namespace TodoList.DataAccess.TodoContext
     }
 
     //    NB: поле типа public int InitiatorId { get; set; } вызывает ошибку: 
-    //
     //    Microsoft.Data.SqlClient.SqlException:
     //    'Introducing FOREIGN KEY constraint 'FK_Entries_Users_InitiatorId' on table 'Entries'
     //    may cause cycles or multiple cascade paths.
     //    Specify ON DELETE NO ACTION or ON UPDATE NO ACTION, or modify other FOREIGN KEY constraints.
     //    Could not create constraint or index.See previous errors.'
-    //
     //    если необходимо имя с окончанием на Id выбирай тип long
 }

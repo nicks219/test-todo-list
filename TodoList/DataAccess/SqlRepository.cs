@@ -57,7 +57,6 @@ namespace TodoList.DataAccess
                 .ToList();
             // NB: возвращаю IQueryable с надеждой на будущие изменения
             var linqQuery = contextQuerry
-                //.OrderBy(e => _keySelector(e))
                 .Where(e => _predicate(e))
                 .Count();
 

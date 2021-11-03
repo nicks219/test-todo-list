@@ -24,11 +24,11 @@ namespace TodoList.Controllers
             _scope = serviceScopeFactory;
         }
 
-        // NB: при ошибке (запрос с Create контроллера [Authorize]) вернёт
+        // NB: при ошибке авторизации (запрос с Create контроллера [Authorize]) вернёт
         // https://localhost:5001/Account/Login/?ReturnUrl=%2Fentry%2Fonpostcreate
         // redirected: true
         //
-        // NB: при успехе (запрос с Create контроллера [Authorize])вернет
+        // NB: при успехе авторизации (запрос с Create контроллера [Authorize])вернет
         // https://localhost:5001/entry/onpostcreate
         // redirected: false
         [HttpGet("[action]")]

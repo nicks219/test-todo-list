@@ -1,9 +1,10 @@
 ﻿import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Header, TableBody, Select } from './Select';
+import { Header, TableBody, Select } from './Table';
+import { RenderContent, getProblemStatuses } from './Loader';
 
 export class Update extends Component {
-    static displayName = Update.name;
+    displayName = Update.name;
 
     mounted = true;
 
@@ -17,8 +18,9 @@ export class Update extends Component {
 
     constructor(props) {
         super(props);
+
         this.state = { backlog: [], problemStatuses: [], loading: true };
-        // NB: костыль, при "обновлении" будет загружена первая запись, но хотя бы не "отвалится"
+        // NB: костыль, при "обновлении страницы" будет загружена первая запись, но хотя бы не "отвалится"
         if (props.location.fromReadComponent != undefined) {
             this.id = props.location.propsState;
             this.page = props.location.fromReadComponent;
@@ -26,7 +28,7 @@ export class Update extends Component {
     }
 
     async componentDidMount() {
-        await this.getProblemStatus();
+        await getProblemStatuses(this);
         await this.getEntriesData();
         this.mounted = true;
     }
@@ -42,14 +44,10 @@ export class Update extends Component {
     select = (e) => {
 
         const data = this.state.backlog;
-        const status = Number(e.target.value) + 1;
+        const status = Number(++e.target.value);
         data.taskStatus.problemStatusId = status;
         this.setState({ backlog: data });
     }
-
-    //expired = {
-    //    backgroundColor: "#333333"
-    //}
 
     checkValidity = (backlog) => {
         // TODO: сделай валидацию по дэдлайну или удали этот метод
@@ -102,6 +100,7 @@ export class Update extends Component {
     }
 
     inputText = (e) => {
+
         const newText = e.target.value;
         const data = this.state.backlog;
         data.description = newText;
@@ -109,51 +108,41 @@ export class Update extends Component {
     }
 
     render() {
-        let contents = this.state.loading
-            ? <p><em>Please wait...</em></p>
-            : this.renderBacklogTable(this.state.backlog);
 
         return (
-            <div>
-                <h1 id="tabelLabel" >Update</h1>
-                <p>This component is under development.</p>
-                {contents}
-            </div>
+            <RenderContent component={this} />
         );
     }
 
     async getEntriesData() {
+
         const response = await fetch('entry/ongetentry?id=' + this.id);
         const data = await response.json();
-
-        // NB: пустая бд - пока не знаю как лучше поступить
         if (data.description === null) {
             console.log("Seed DB please...");
         }
 
-        if (this.mounted) this.setState({ backlog: data, loading: false });
+        if (this.mounted) {
+            this.setState({ backlog: data, loading: false });
+        }
     }
 
     async putEntriesData() {
+
         var requestBody = JSON.stringify(this.state.backlog);
         const response = await fetch('entry',
             { method: "PUT", headers: { 'Content-Type': "application/json;charset=utf-8" }, body: requestBody });
         const data = await response.json();
-        // NB: если Update не удался, но больше похоже на костыль
         if (data.initiator === null) {
             console.log("UPDATE ABORTED");
             const data2 = this.state.backlog;
             data2.description = data.description;
-            if (this.mounted) this.setState({ backlog: data2, loading: false });
+            if (this.mounted) {
+                this.setState({ backlog: data2, loading: false });
+            }
         }
-        else {
-            if (this.mounted) this.setState({ backlog: data, loading: false });
+        else if (this.mounted) {
+            this.setState({ backlog: data, loading: false });
         }
-    }
-
-    async getProblemStatus() {
-        const response = await fetch('entry/ongetproblemstatuses');
-        const data = await response.json();
-        if (this.mounted) this.setState({ problemStatuses: data });
     }
 }

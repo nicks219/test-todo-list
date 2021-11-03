@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Header, TableBody, Select } from './Select';
+import { Header, TableBody, Select } from './Table';
+import { RenderContent, getProblemStatuses } from './Loader';
 
 export class Read extends Component {
-    static displayName = Read.name;
+    displayName = Read.name;
 
     mounted = true;
 
@@ -16,11 +17,12 @@ export class Read extends Component {
 
     constructor(props) {
         super(props);
+
         this.state = { backlog: [], problemStatuses: [], loading: true };
     }
 
     async componentDidMount() {
-        await this.getProblemStatus();
+        await getProblemStatuses(this);
         await this.getEntriesData();
         this.mounted = true;
     }
@@ -40,21 +42,17 @@ export class Read extends Component {
     }
 
     select = (e) => {
-        // NB: id в бд начинаются от единицы
-        this.filter = Number(e.target.value) + 1;
+        this.filter = Number(++e.target.value);
         this.getEntriesData();
     }
 
-    //expired = {
-    //    backgroundColor: "#333333"
-    //}
-
     checkValidity = (backlog) => {
-        // TODO: сделай валидацию по дэдлайну
+        // TODO: сделай валидацию по дэдлайну или удали этот метод
         return false;
     }
 
     renderBacklogTable(backlog) {
+
         return (
             <table className='table table-striped' aria-labelledby="tabelLabel" id="theme">
                 <thead>
@@ -101,26 +99,15 @@ export class Read extends Component {
         );
     }
 
-    // display: 'none' display: ''
-    //style = {{
-    //                ...styles.productOptions,
-    //    backgroundColor: checkedButton === item.id ? "grey" : "white",
-    //              }}
     render() {
-        let contents = this.state.loading
-            ? <p><em>Please wait...</em></p>
-            : this.renderBacklogTable(this.state.backlog);
 
         return (
-            <div>
-                <h1 id="tabelLabel" >Todo List</h1>
-                <p>This component is under development.</p>
-                {contents}
-            </div>
+            <RenderContent component={this} />
         );
     }
 
     async getEntriesData() {
+
         if (this.props.location.fromUpdateComponent != undefined) {
             this.page = this.props.location.fromUpdateComponent;
             this.filter = this.props.location.filter;
@@ -129,15 +116,18 @@ export class Read extends Component {
 
         const response = await fetch('entry/ongetpage?page=' + this.page + "&filter=" + this.filter);
         const data = await response.json();
+        if (data != null && data.length > 0) {
+            this.page = data[0].currentPage;
+        }
 
-        if (data != null && data.length > 0) this.page = data[0].currentPage;
-
-        if (this.mounted) this.setState({ backlog: data, loading: false });
-    }
-
-    async getProblemStatus() {
-        const response = await fetch('entry/ongetproblemstatuses');
-        const data = await response.json();
-        if (this.mounted) this.setState({ problemStatuses: data });
+        if (this.mounted) {
+            this.setState({ backlog: data, loading: false });
+        }
     }
 }
+
+// display: 'none' display: ''
+//style = {{
+//                ...styles.productOptions,
+//    backgroundColor: checkedButton === item.id ? "grey" : "white",
+//              }}

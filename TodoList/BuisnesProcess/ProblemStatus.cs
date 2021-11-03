@@ -3,7 +3,7 @@
     // NB: Имя TaskStatus конфликтует с Threading
     public enum ProblemStatus
     {
-        // NB: id в sql идут от 1, enum идут от 0
+        // NB: id в sql идут от 1
         New = 1,
         InProgress = 2,
         Complited = 3,

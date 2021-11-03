@@ -41,7 +41,3 @@ export const TableBody = ({ backlog }) => {
         </>
     );
 }
-
-export function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}

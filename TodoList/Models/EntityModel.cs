@@ -32,7 +32,7 @@ namespace TodoList.Models
             // NB: костыль, сделай проверку входных данных, при невалидном id бд ничего не выдаёт
             if (id == 0)
             {
-                id = 1;
+                id++;
             }
 
             using var repo = _serviceScope.ServiceProvider.GetRequiredService<IRepository>();
@@ -42,7 +42,7 @@ namespace TodoList.Models
 
         public List<EntryEntity> GetEntries(int currentPage, int filter, out int correctedPage)
         {
-            // NB: фильтр через DI в таком виде работает некорректно
+            // NB: Filter через DI будет работать некорректно
             Filter filters = new();
             if (filter != NoFilter)
             {

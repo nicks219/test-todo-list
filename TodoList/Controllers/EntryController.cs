@@ -29,7 +29,7 @@ namespace TodoList.Controllers
         public ActionResult<EntryDto> OnGetEntry(int id = 1)
         {
             try
-            {
+            {              
                 using var scope = _serviceScopeFactory.CreateScope();
                 var result = new EntityModel(scope).GetEntry(id);
                 return EntryDto.ConvertToDto(result);
@@ -73,7 +73,6 @@ namespace TodoList.Controllers
             }
         }
 
-        // NB: список Users для Create
         [HttpGet("[action]")]
         public ActionResult<List<UserDto>> OnGetUsers()
         {

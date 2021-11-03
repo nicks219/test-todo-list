@@ -67,7 +67,8 @@ namespace TodoList.DataAccess.DTO
                 EntryId = model.EntryId,
                 Executor = model.Executor,
                 Initiator = model.Initiator,
-                Report = "костыль", // TODO: model.Report,
+                // TODO: Report = model.Report,
+                Report = "костыль", 
                 StartDate = model.StartDate,
                 TaskStatus = model.TaskStatus,
                 Title = model.Title

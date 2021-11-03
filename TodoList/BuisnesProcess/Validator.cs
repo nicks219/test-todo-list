@@ -31,7 +31,7 @@ namespace TodoList.BuisnesProcess
 
             if (entry.Initiator == null || entry.Executor == null) return false;
 
-            // NB: по умолчанию DateTime имеет значение DateTime.MinValue, он никгда не равер null
+            // NB: по умолчанию DateTime имеет значение DateTime.MinValue, он никгда не равен null
             if (entry.Deadline == System.DateTime.MinValue) entry.Deadline = System.DateTime.Now;
             //if (entry.Deadline == System.DateTime.MinValue) return false;
 
