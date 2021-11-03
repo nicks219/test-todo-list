@@ -7,7 +7,7 @@ export class Login extends Component {
 
     constructor(props) {
         super(props);
-        this.submit = this.submit.bind(this);
+        this.submit = this.login.bind(this);
         this.url = "/account/login";
         this.state = { style: "submitStyle" };
         document.getElementById("login").style.display = "block";
@@ -21,26 +21,29 @@ export class Login extends Component {
         this.mounted = false;
     }
 
-    submit(e) {
-        e.preventDefault();
+    async login() {
         let userName = document.getElementById("name").value;
         // NB: ЗАГЛУШКА
         userName = "Slame";
-        window.fetch(this.url + "?userName=" + String(userName))
-            .then(response => response.ok ? this.loginOk(response) : console.log("Login error"));
+        await fetch('login/login?userName=' + String(userName))
+            .then(response => response.ok ? console.log("Login completed") : console.log("Login error"));
+    }
+
+    async logout() {
+        await fetch('login/logout/')
+            .then(response => response.ok ? console.log("Logout completed") : console.log("Logout error"));
     }
 
     loginOk = (response) => {
 
         console.log(response.text());
-
     }
 
     render() {
         return (
             <div>
                 <span id={this.state.style}>
-                    <button type="checkbox" id="loginButton" className="btn btn-info" onClick={this.submit} >
+                    <button type="checkbox" id="loginButton" className="btn btn-info" onClick={this.login} >
                         LOGIN
                     </button>
                 </span>
@@ -51,6 +54,12 @@ export class Login extends Component {
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 <span>
                     <input type="text" id="password" />
+                </span>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <span id={this.state.style}>
+                    <button type="checkbox" id="loginButton" className="btn btn-info" onClick={this.logout} >
+                        LOGOUT
+                    </button>
                 </span>
             </div>
         );

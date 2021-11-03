@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using RandomSongSearchEngine.Dto;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using TodoList.BuisnesProcess;
 using TodoList.DataAccess.TodoContext;
+using TodoList.Dto;
 
 namespace TodoList.DataAccess
 {
@@ -57,7 +57,7 @@ namespace TodoList.DataAccess
                 .ToList();
             // NB: возвращаю IQueryable с надеждой на будущие изменения
             var linqQuery = contextQuerry
-                .OrderBy(e => _keySelector(e))
+                //.OrderBy(e => _keySelector(e))
                 .Where(e => _predicate(e))
                 .Count();
 

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Select } from './Select';
+import { Header, TableBody, Select } from './Select';
 
 export class Read extends Component {
     static displayName = Read.name;
@@ -66,34 +66,18 @@ export class Read extends Component {
                             <button onClick={this.forw} className="btn btn-info">FORW&gt;</button>
                         </th>
                         <th>
-                            <select onChange={this.select} value={ Number(this.filter - 1) }>
-                                {this.state.problemStatuses.map((a, i) =>
-                                    <option value={i} key={i.toString()}>
-                                        {a.problemStatusName}
-                                    </option>
-                                )}
-                            </select>
+                            <Select select={this.select} value={this.filter} list={this.state.problemStatuses} id={1} />
                         </th>
                     </tr>
                     <tr>
-                        <th>Title</th>
-                        <th>Initiator</th>
-                        <th>Executor</th>
-                        <th>Start Date</th>
-                        <th>Deadline</th>
-                        <th>Completion Date</th>
+                        <Header />
                     </tr>
                 </thead>
                 <tbody>
                     {backlog.map(backlog =>
                         <React.Fragment key={backlog.entryId}>
                             <tr style={{ backgroundColor: this.checkValidity(backlog) === true ? "white" : this.expired }}>
-                                <td>{backlog.title}</td>
-                                <td>{backlog.initiator.name}</td>
-                                <td>{backlog.executor.name}</td>
-                                <td>{new Date(backlog.startDate).toDateString()}</td>
-                                <td>{new Date(backlog.deadline).toDateString()}</td>
-                                <td>{new Date(backlog.completionDate).toDateString()}</td>
+                                <TableBody backlog={backlog} />
                             </tr>
                             <tr>
                                 <th colSpan="2" scope="row">Description</th>
@@ -112,7 +96,6 @@ export class Read extends Component {
                             </tr>
                         </React.Fragment>
                     )}
-
                 </tbody>
             </table>
         );

@@ -1,14 +1,14 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using RandomSongSearchEngine.Dto;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using TodoList.DataAccess;
 using TodoList.DataAccess.TodoContext;
+using TodoList.Dto;
 
-namespace RandomSongSearchEngine.Models
+namespace TodoList.Models
 {
     public class LoginModel
     {

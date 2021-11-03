@@ -3,16 +3,16 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using RandomSongSearchEngine.Dto;
-using RandomSongSearchEngine.Models;
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using TodoList.Dto;
+using TodoList.Models;
 
-namespace RandomSongSearchEngine.Controllers
+namespace TodoList.Controllers
 {
     [ApiController]
-    [Route("account/{action}")]
+    [Route("[controller]")]
     public class LoginController : ControllerBase
     {
         private readonly ILogger<LoginController> _logger;
@@ -31,13 +31,20 @@ namespace RandomSongSearchEngine.Controllers
         // NB: при успехе (запрос с Create контроллера [Authorize])вернет
         // https://localhost:5001/entry/onpostcreate
         // redirected: false
-        [HttpGet]
+        [HttpGet("[action]")]
         public async Task<ActionResult<string>> Login(string userName)
         {
             var loginModel = new LoginDto(userName);
             var response = await Login(loginModel);
             return response == "[Ok]" ? "[LoginController: Login Ok]" : "[LoginController: Error]";
             //(ActionResult<string>)BadRequest(response);
+        }
+
+        [HttpGet("[action]")]
+        public async Task<ActionResult<string>> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return "[LoginController: Logout]";
         }
 
         [HttpPost]
@@ -59,12 +66,6 @@ namespace RandomSongSearchEngine.Controllers
                 _logger.LogError(ex, "[LoginController: System Error]");
                 return "[LoginController: System Error]";
             }
-        }
-
-        public async Task<ActionResult<string>> Logout(string returnurl)
-        {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return "[LoginController: Logout]";
         }
     }
 }

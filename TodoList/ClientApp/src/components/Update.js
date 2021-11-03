@@ -1,6 +1,6 @@
 ﻿import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Select } from './Select';
+import { Header, TableBody, Select } from './Select';
 
 export class Update extends Component {
     static displayName = Update.name;
@@ -76,44 +76,26 @@ export class Update extends Component {
                         </th>
                     </tr>
                     <tr>
-                        <th>Title</th>
-                        <th>Initiator</th>
-                        <th>Executor</th>
-                        <th>Start Date</th>
-                        <th>Deadline</th>
-                        <th>Completion Date</th>
+                        <Header />
                         <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
-
                     <React.Fragment key={backlog.entryId}>
                         <tr style={{ backgroundColor: this.checkValidity(backlog) === true ? "white" : this.expired }}>
-                            <td>{backlog.title}</td>
-                            <td>{backlog.initiator.name}</td>
-                            <td>{backlog.executor.name}</td>
-                            <td>{new Date(backlog.startDate).toDateString()}</td>
-                            <td>{new Date(backlog.deadline).toDateString()}</td>
-                            <td>{new Date(backlog.completionDate).toDateString()}</td>
+                            <TableBody backlog={backlog} />
                             <td>
-                                <select onChange={this.select} value={Number(backlog.taskStatus.problemStatusId - 1)}>
-                                    {this.state.problemStatuses.map((a, i) =>
-                                        <option value={i} key={i.toString()}>
-                                            {a.problemStatusName}
-                                        </option>
-                                    )}
-                                </select>
+                                <Select select={this.select} value={backlog.taskStatus.problemStatusId} list={this.state.problemStatuses} id={1} />
                             </td>
                         </tr>
                         <tr>
                             <th colSpan="2" scope="row">Description</th>
                             <td colSpan="3" style={{ display: '' }}>
-                                <textarea id={8} value={backlog.description} cols={66} rows={8} onChange={this
-                                    .inputText} />
+                                <textarea id={8} value={backlog.description} cols={66} rows={8}
+                                    onChange={this.inputText} />
                             </td>
                         </tr>
                     </React.Fragment>
-
                 </tbody>
             </table>
         );

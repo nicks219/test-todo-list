@@ -1,4 +1,4 @@
-﻿namespace RandomSongSearchEngine.Dto
+﻿namespace TodoList.Dto
 {
     public class LoginDto
     {

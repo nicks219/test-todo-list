@@ -1,17 +1,10 @@
 ﻿import React, { Component, useState } from 'react';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { Select } from './Select';
+import { Header, Select } from './Select';
 
 // TODO: учись писать функциональные компоненты на хуках, вот пример того же календаря
-// <DatePicker selected={this.state.date} onChange={(date) => this.setStartDate(date)} />
-// <DatePicker selected={startdate} onChange={(date) => setStartDate(date)} />
-const Example = () => {
-    const [startDate, setStartDate] = useState(new Date());
-    return (
-        <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} />
-    );
-};
+// const [startDate, setStartDate] = useState(new Date());
 
 export class Create extends Component {
     static displayName = Create.name;
@@ -90,26 +83,17 @@ export class Create extends Component {
                         </th>
                     </tr>
                     <tr>
-                        <th>Title</th>
-                        <th>Initiator</th>
-                        <th>Executor</th>
-                        <th>Start Date</th>
-                        <th>Deadline</th>
-                        <th>Completion Date</th>
+                        <Header />
                         <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
-
                     <React.Fragment key={backlog.entryId}>
                         <tr style={{ backgroundColor: this.checkValidity(backlog) === true ? "white" : this.expired }}>
                             <td>{backlog.title}</td>
                             <td>
-                                {/*// TODO: можно убрать проверку*/}
-                                {backlog.initiator !== undefined ?
-                                    <Select select={this.select} value={backlog.initiator.userId} list={this.state.users} id={0} />
-                                    : <div></div>
-                                }
+                                {/*{backlog.initiator !== undefined ?}*/}
+                                <Select select={this.select} value={backlog.initiator.userId} list={this.state.users} id={0} />
                             </td>
                             <td>
                                 {this.state.executor !== undefined ? backlog.executor.name : ''}
@@ -120,11 +104,7 @@ export class Create extends Component {
                             <td>{new Date(backlog.deadline).toDateString()}</td>
                             <td>{new Date(backlog.completionDate).toDateString()}</td>
                             <td>
-                                {/*// TODO: можно убрать проверку*/}
-                                {backlog.taskStatus !== undefined ?
-                                    <Select select={this.select} value={backlog.taskStatus.problemStatusId} list={this.state.problemStatuses} id={1} />
-                                    : <div></div>
-                                }
+                                <Select select={this.select} value={backlog.taskStatus.problemStatusId} list={this.state.problemStatuses} id={1} />
                             </td>
                         </tr>
                         <tr>
@@ -135,7 +115,6 @@ export class Create extends Component {
                             </td>
                         </tr>
                     </React.Fragment>
-
                 </tbody>
             </table>
         );
@@ -183,8 +162,12 @@ export class Create extends Component {
         const response = await fetch('entry/onpostcreate',
             { method: "POST", headers: { 'Content-Type': "application/json;charset=utf-8" }, body: requestBody });
 
+        // NB: login please
         if (response.redirected === true) {
             console.log('Login please');
+            const data = this.state.backlog;
+            data.description = 'Login please';
+            if (this.mounted) this.setState({ backlog: data, loading: false });
             return;
         }
         const data = await response.json();
