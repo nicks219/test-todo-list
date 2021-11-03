@@ -20,10 +20,14 @@ namespace TodoList.DataAccess
             _context = serviceProvider.GetRequiredService<TodoContext.TodoContext>();
         }
 
-        public void SetFilters(Filters filters)
+        public EntryEntity GetEntry(int id)
         {
-            _predicate = filters.GetPredicate();
-            _keySelector = filters.GetKeySelector();
+            return _context
+                .Entries
+                .Include(e => e.Initiator.UserStatus)
+                .Include(e => e.Executor.UserStatus)
+                .Include(p => p.TaskStatus)
+                .FirstOrDefault(e => e.EntryId == id);
         }
 
         public IQueryable<EntryEntity> GetEntries(int currentPage, int pageSize)
@@ -43,16 +47,6 @@ namespace TodoList.DataAccess
                 .AsQueryable();
 
             return linqQuery;
-        }
-
-        public EntryEntity GetEntry(int id)
-        {
-            return _context
-                .Entries
-                .Include(e => e.Initiator.UserStatus)
-                .Include(e => e.Executor.UserStatus)
-                .Include(p => p.TaskStatus)
-                .FirstOrDefault(e => e.EntryId == id);
         }
 
         public int GetEntriesCount()
@@ -76,6 +70,12 @@ namespace TodoList.DataAccess
             return result;
         }
 
+        public UserEntity GetUser(LoginDto login)
+        {
+            return _context.Users
+                .FirstOrDefault(u => u.Name == login.UserName);
+        }
+
         public IQueryable<UserEntity> GetAllUsers()
         {
             return _context
@@ -94,9 +94,11 @@ namespace TodoList.DataAccess
             return _context.ProblemStatus.Find((int)problemStatus);
         }
 
-        public bool StatusExist()
+        public IQueryable<ProblemStatusEntity> GetAllProblemStatuses()
         {
-            return _context.Set<UserStatusEntity>().Count() != 0;
+            return _context.ProblemStatus
+                .Select(s => s)
+                .AsNoTracking();
         }
 
         public int Create(IEntity entity)
@@ -123,6 +125,24 @@ namespace TodoList.DataAccess
             return result;
         }
 
+        public int Update(EntryEntity entry)
+        {
+            _context.Entries.Update(entry);
+            var result = _context.SaveChanges();
+            return result;
+        }
+
+        public bool StatusExist()
+        {
+            return _context.Set<UserStatusEntity>().Any();
+        }
+
+        public void SetFilters(Filters filters)
+        {
+            _predicate = filters.GetPredicate();
+            _keySelector = filters.GetKeySelector();
+        }
+
         public void Dispose()
         {
             _context?.Dispose();
@@ -131,27 +151,6 @@ namespace TodoList.DataAccess
         public async ValueTask DisposeAsync()
         {
             await _context.DisposeAsync().ConfigureAwait(false);
-        }
-
-        public int Update(EntryEntity entry)
-        {
-            _context.Entries.Update(entry);
-
-            var result = _context.SaveChanges();
-            return result;
-        }
-
-        public IQueryable<ProblemStatusEntity> GetAllProblemStatuses()
-        {
-            return _context.ProblemStatus
-                .Select(s => s)
-                .AsNoTracking();
-        }
-
-        public UserEntity GetUser(LoginDto login)
-        {
-            return _context.Users
-                .FirstOrDefault(u => u.Name == login.UserName);
         }
     }
 }

@@ -73,7 +73,7 @@ namespace TodoList.Controllers
             }
         }
 
-        // NB: для Create
+        // NB: список Users для Create
         [HttpGet("[action]")]
         public ActionResult<List<UserDto>> OnGetUsers()
         {
