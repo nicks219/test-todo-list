@@ -51,6 +51,7 @@ export class Update extends Component {
     //}
 
     checkValidity = (backlog) => {
+        // TODO: сделай валидацию по дэдлайну или удали этот метод
         return false;
     }
 

@@ -3,7 +3,7 @@ using TodoList.DataAccess.TodoContext;
 
 namespace TodoList.BuisnesProcess
 {
-    public class Rules : IRules
+    public class Validator : IValidator
     {
         private static readonly int TITLE_MIN_LENGTH = 5;
         private static readonly int REPORT_MIN_LENGTH = 5;

@@ -1,8 +1,11 @@
 ﻿import React, { Component, useState } from 'react';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { Select } from './Select';
 
 // TODO: учись писать функциональные компоненты на хуках, вот пример того же календаря
+// <DatePicker selected={this.state.date} onChange={(date) => this.setStartDate(date)} />
+// <DatePicker selected={startdate} onChange={(date) => setStartDate(date)} />
 const Example = () => {
     const [startDate, setStartDate] = useState(new Date());
     return (
@@ -65,6 +68,7 @@ export class Create extends Component {
     //}
 
     checkValidity = (backlog) => {
+        // TODO: сделай валидацию по дэдлайну или удали этот метод
         return false;
     }
 
@@ -101,23 +105,15 @@ export class Create extends Component {
                         <tr style={{ backgroundColor: this.checkValidity(backlog) === true ? "white" : this.expired }}>
                             <td>{backlog.title}</td>
                             <td>
-
-                                {/*TODO: если ситуация такая, что getStatus или getUsers получили undefined, то надо вызывать их заново*/}
-                                {/*TODO: делай бэк асинхронным - эту ошибку сложно вызвать*/}
-                                
-                                {this.state.backlog.initiator !== undefined ?
-                                    <select onChange={this.select} value={Number(this.state.backlog.initiator.userId - 1)} id={0}>
-                                        {this.state.users.map((a, i) =>
-                                            <option value={i} key={i.toString() + 'i'}>
-                                                {a.name}
-                                            </option>
-                                        )}
-                                    </select> : <div></div>
+                                {/* TODO: getStatus или getUsers могут вернуть undefined - надо вызывать их заново */}
+                                {/* TODO: или делай бэк асинхронным - эту ошибку сложно вызвать, или я что-то криво сделал */}
+                                {backlog.initiator !== undefined ?
+                                    <Select select={this.select} value={backlog.initiator.userId} list={this.state.users} id={0} />
+                                    : <div></div>
                                 }
-
                             </td>
                             <td>
-                                {this.state.executor !== undefined ? backlog.executor.name : '' }
+                                {this.state.executor !== undefined ? backlog.executor.name : ''}
                             </td>
                             <td>
                                 <DatePicker selected={this.state.date} onChange={(date) => this.setStartDate(date)} />
@@ -125,17 +121,10 @@ export class Create extends Component {
                             <td>{new Date(backlog.deadline).toDateString()}</td>
                             <td>{new Date(backlog.completionDate).toDateString()}</td>
                             <td>
-
                                 {backlog.taskStatus !== undefined ?
-                                    <select onChange={this.select} value={Number(backlog.taskStatus.problemStatusId - 1)} id={1}>
-                                        {this.state.problemStatuses.map((a, i) =>
-                                            <option value={i} key={i.toString()}>
-                                                {a.problemStatusName}
-                                            </option>
-                                        )}
-                                    </select> : <div></div>
+                                    <Select select={this.select} value={backlog.taskStatus.problemStatusId} list={this.state.problemStatuses} id={1} />
+                                    : <div></div>
                                 }
-
                             </td>
                         </tr>
                         <tr>
@@ -197,7 +186,7 @@ export class Create extends Component {
             console.log('Login please');
             return;
         }
-         const data = await response.json();
+        const data = await response.json();
 
         // NB: если Create не удался, но больше похоже на костыль
         if (data.initiator === null) {

@@ -16,9 +16,9 @@ namespace TodoList.Controllers
     {
         private readonly ILogger<EntryController> _logger;
         private readonly IServiceScopeFactory _serviceScopeFactory;
-        private readonly IRules _rules;
+        private readonly IValidator _rules;
 
-        public EntryController(ILogger<EntryController> logger, IServiceScopeFactory serviceScopeFactory, IRules rules)
+        public EntryController(ILogger<EntryController> logger, IServiceScopeFactory serviceScopeFactory, IValidator rules)
         {
             _logger = logger;
             _serviceScopeFactory = serviceScopeFactory;

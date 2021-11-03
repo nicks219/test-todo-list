@@ -137,7 +137,7 @@ namespace TodoList.DataAccess
             return _context.Set<UserStatusEntity>().Any();
         }
 
-        public void SetFilters(Filters filters)
+        public void SetFilters(Filter filters)
         {
             _predicate = filters.GetPredicate();
             _keySelector = filters.GetKeySelector();

@@ -3,12 +3,12 @@ using TodoList.DataAccess.TodoContext;
 
 namespace TodoList.DataAccess
 {
-    public class Filters
+    public class Filter
     {
         private Func<EntryEntity, bool> _predicate;
         private Func<EntryEntity, int> _keySelector;
 
-        public Filters()
+        public Filter()
         {
             // NB: правила фильтрации по умолчанию
             _predicate = (e) => { return true; };

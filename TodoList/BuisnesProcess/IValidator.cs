@@ -3,7 +3,7 @@ using TodoList.DataAccess.TodoContext;
 
 namespace TodoList.BuisnesProcess
 {
-    public interface IRules
+    public interface IValidator
     {
         bool IsModelValid(EntryEntity entry);
 

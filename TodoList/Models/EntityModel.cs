@@ -15,14 +15,14 @@ namespace TodoList.Models
         private const int MinPage = 0;
         private const int NoFilter = 6;
         private readonly IServiceScope _serviceScope;
-        private readonly IRules _rules;
+        private readonly IValidator _rules;
 
         public EntityModel(IServiceScope serviceScope)
         {
             _serviceScope = serviceScope;
         }
 
-        public EntityModel(IServiceScope serviceScope, IRules rules) : this(serviceScope)
+        public EntityModel(IServiceScope serviceScope, IValidator rules) : this(serviceScope)
         {
             this._rules = rules;
         }
@@ -43,7 +43,7 @@ namespace TodoList.Models
         public List<EntryEntity> GetEntries(int currentPage, int filter, out int correctedPage)
         {
             // NB: фильтр через DI в таком виде работает некорректно
-            Filters filters = new();
+            Filter filters = new();
             if (filter != NoFilter)
             {
                 filters.SetPredicate((e) => { return e.TaskStatus.ProblemStatusId == filter; });
