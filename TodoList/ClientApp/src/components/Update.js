@@ -17,7 +17,7 @@ export class Update extends Component {
     constructor(props) {
         super(props);
         this.state = { backlog: [], problemStatuses: [], loading: true };
-        // костыль: при "обновлении" будет загружена первая запись, но хотя бы не "отвалится"
+        // NB: костыль, при "обновлении" будет загружена первая запись, но хотя бы не "отвалится"
         if (props.location.fromReadComponent != undefined) {
             this.id = props.location.propsState;
             this.page = props.location.fromReadComponent;
@@ -142,8 +142,7 @@ export class Update extends Component {
         const response = await fetch('entry/ongetentry?id=' + this.id);
         const data = await response.json();
 
-        // пустая бд - пока не знаю как лучше поступить
-        // убирай из меню Update
+        // NB: пустая бд - пока не знаю как лучше поступить
         if (data.description === null) {
             console.log("Seed DB please...");
         }
@@ -156,9 +155,9 @@ export class Update extends Component {
         const response = await fetch('entry',
             { method: "PUT", headers: { 'Content-Type': "application/json;charset=utf-8" }, body: requestBody });
         const data = await response.json();
-        // если Update не удался, но больше похоже на костыль
+        // NB: если Update не удался, но больше похоже на костыль
         if (data.initiator === null) {
-            console.log("CREATE ABORTED");
+            console.log("UPDATE ABORTED");
             const data2 = this.state.backlog;
             data2.description = data.description;
             if (this.mounted) this.setState({ backlog: data2, loading: false });

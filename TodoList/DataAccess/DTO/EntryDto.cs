@@ -8,11 +8,6 @@ namespace TodoList.DataAccess.DTO
 {
     public class EntryDto
     {
-        // Правила ролевого доступа
-        //public List<ProblemStatus> ValidStatuses { get; set; }
-        //public List<ActionStatus> ValidActions { get; set; }
-
-        /// Поля EntryEntity
         public int EntryId { get; set; }
 
         public string Title { get; set; }
@@ -23,7 +18,6 @@ namespace TodoList.DataAccess.DTO
 
         public UserEntity Executor { get; set; }
 
-        // av: "Expiration"
         public DateTime Deadline { get; set; }
 
         public string Report { get; set; }
@@ -36,7 +30,7 @@ namespace TodoList.DataAccess.DTO
 
         public int CurrentPage { get; set; }
 
-        // Необходим для десериализации
+        // NB: необходим для десериализации
         [JsonConstructor]
         public EntryDto() { }
 

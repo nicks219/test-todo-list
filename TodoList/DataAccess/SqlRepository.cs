@@ -9,7 +9,6 @@ using TodoList.DataAccess.TodoContext;
 
 namespace TodoList.DataAccess
 {
-    // закомментированные методы не удаляю, возможно пригодятся
     public class SqlRepository : IRepository
     {
         private readonly TodoContext.TodoContext _context;
@@ -35,7 +34,7 @@ namespace TodoList.DataAccess
                 .Include(e => e.Executor.UserStatus)
                 .Include(p => p.TaskStatus)
                 .ToList();
-            // отдаю IQueryable с надеждой на будущие изменения
+            // NB: возвращаю IQueryable с надеждой на будущие изменения
             var linqQuery = contextQuery
                 .OrderBy(e => _keySelector(e))
                 .Where(e => _predicate(e))
@@ -62,7 +61,7 @@ namespace TodoList.DataAccess
                 .Entries
                 .Include(p => p.TaskStatus)
                 .ToList();
-            // отдаю IQueryable с надеждой на будущие изменения
+            // NB: возвращаю IQueryable с надеждой на будущие изменения
             var linqQuery = contextQuerry
                 .OrderBy(e => _keySelector(e))
                 .Where(e => _predicate(e))
@@ -136,9 +135,6 @@ namespace TodoList.DataAccess
 
         public int Update(EntryEntity entry)
         {
-
-            //_context.Attach<UserEntity>(entry.Initiator);
-            //_context.Attach<UserEntity>(entry.Executor);
             _context.Entries.Update(entry);
 
             var result = _context.SaveChanges();

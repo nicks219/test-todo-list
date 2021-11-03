@@ -14,7 +14,6 @@ namespace TodoList.Controllers
     [Route("[controller]")]
     public class EntryController : ControllerBase
     {
-        /// логгирование пока не подключено
         private readonly ILogger<EntryController> _logger;
         private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly IRules _rules;
@@ -74,7 +73,7 @@ namespace TodoList.Controllers
             }
         }
 
-        // Для Create
+        // NB: для Create
         [HttpGet("[action]")]
         public ActionResult<List<UserDto>> OnGetUsers()
         {
@@ -87,7 +86,7 @@ namespace TodoList.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "[EntryController: OnGetProblemStatuses]");
-                // TODO: ???
+                // TODO: верни что-то более информативное
                 return null;
             }
         }
@@ -103,7 +102,7 @@ namespace TodoList.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "[EntryController: OnPostCreateStub]");
-                // TODO: ???
+                // TODO: верни что-то более информативное
                 return null;
             }
         }
@@ -130,7 +129,6 @@ namespace TodoList.Controllers
         {
             try
             {
-                // найди куда IRules прикрутить - вовнутрь прокинь
                 using var scope = _serviceScopeFactory.CreateScope();
                 var result = new EntityModel(scope, _rules).UpdateEntry(dto);
                 return EntryDto.ConvertToDto(result);

@@ -10,7 +10,7 @@ export class ReadEntries extends Component {
 
     expired = "#333333";
 
-    // костыль для старта: 6 - отсутствие фильтрации на бэке
+    // NB: костыль для старта, '6' - отсутствие фильтрации на бэке
     filter = 6;
 
     constructor(props) {
@@ -39,7 +39,7 @@ export class ReadEntries extends Component {
     }
 
     select = (e) => {
-        //id в бд начинаются от единицы
+        // NB: id в бд начинаются от единицы
         this.filter = Number(e.target.value) + 1;
         this.getEntriesData();
     }

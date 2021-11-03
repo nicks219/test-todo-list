@@ -2,7 +2,7 @@
 
 export class Login extends Component {
 
-    // ВНИМАНИЕ, ИСПОЛЬЗУЕТСЯ ЗАГЛУШКА ЛОГИНА 
+    // NB: ВНИМАНИЕ, ИСПОЛЬЗУЕТСЯ ЗАГЛУШКА ЛОГИНА
     mounted = false;
 
     constructor(props) {
@@ -24,7 +24,7 @@ export class Login extends Component {
     submit(e) {
         e.preventDefault();
         let userName = document.getElementById("name").value;
-        // ЗАГЛУШКА: 
+        // NB: ЗАГЛУШКА
         userName = "Slame";
         window.fetch(this.url + "?userName=" + String(userName))
             .then(response => response.ok ? this.loginOk(response) : console.log("Login error"));
@@ -39,11 +39,11 @@ export class Login extends Component {
     render() {
         return (
             <div>
-                <div id={this.state.style}>
+                <span id={this.state.style}>
                     <button type="checkbox" id="loginButton" className="btn btn-info" onClick={this.submit} >
                         LOGIN
                     </button>
-                </div>
+                </span>
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 <span>
                     <input type="text" id="name" />

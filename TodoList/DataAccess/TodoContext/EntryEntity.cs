@@ -10,13 +10,13 @@ namespace TodoList.DataAccess.TodoContext
 
         public string Description { get; set; }
 
-        // будет добавлен FK: InitiatorUserId
+        // NB: будет добавлен FK InitiatorUserId
         public UserEntity Initiator { get; set; }
 
-        // будет добавлен FK: ExecutorUserId
+        // NB: будет добавлен FK ExecutorUserId
         public UserEntity Executor { get; set; }
 
-        // av: "Expiration"
+        // NB: "Expiration" как вариант
         public DateTime Deadline { get; set; }
 
         public string Report { get; set; }
@@ -27,7 +27,7 @@ namespace TodoList.DataAccess.TodoContext
 
         public DateTime CompletionDate { get; set; }
 
-        // Many-to-many на данный момент не нужно, но понадобится в дальнейшем
+        // NB: Many-to-many на данный момент не нужно, но понадобится в дальнейшем
         //public ICollection<UserEntryEntity> UserEntryBind { get; set; }
     }
 

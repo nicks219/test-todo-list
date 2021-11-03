@@ -47,7 +47,7 @@ namespace TodoList.DataAccess.DTO
             {
                 foreach (var status in Enum.GetNames(typeof(UserStatus)))
                 {
-                    //var us = (UserStatus)Enum.Parse(typeof(UserStatus), status);
+                    //NB: var us = (UserStatus)Enum.Parse(typeof(UserStatus), status);
                     repo.Create(new UserStatusEntity()
                     { UserStatusName = status });
                 }

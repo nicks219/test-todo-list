@@ -1,20 +1,20 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System;
+using System.IO;
 using TodoList.BuisnesProcess;
 using TodoList.DataAccess;
-using TodoList.DataAccess.TodoContext;
-using System.IO;
-using TodoList.Logger;
-using System;
 using TodoList.DataAccess.DTO;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Http;
+using TodoList.DataAccess.TodoContext;
+using TodoList.Logger;
 
 namespace TodoList
 {
@@ -27,11 +27,10 @@ namespace TodoList
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        // NB: this method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IRules, Rules>();
-            //services.AddSingleton<IFilter, Filters>();
 
             services.AddSwaggerGen(c =>
             {
@@ -42,24 +41,24 @@ namespace TodoList
             string connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<TodoContext>(options => options.UseSqlServer(connectionString));
 
-            // Views и папка Pages оставлены для вывода стэк-трейса в окно браузера на период разработки
+            // NB: Views и папка Pages оставлены для вывода стэк-трейса в окно браузера на период разработки
             services.AddControllersWithViews();
             //services.AddControllers();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
-                    // путь авторизации для [Authorize] контроллеров
+                    // NB: путь авторизации для [Authorize] контроллеров
                     options.LoginPath = new PathString("/Account/Login/");
                 });
 
-            // In production, the React files will be served from this directory
+            // NB: in production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/build";
             });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        // NB: this method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
@@ -71,7 +70,7 @@ namespace TodoList
             else
             {
                 app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                // NB: the default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 

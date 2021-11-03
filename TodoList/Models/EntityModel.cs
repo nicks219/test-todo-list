@@ -29,11 +29,12 @@ namespace TodoList.Models
 
         public EntryEntity GetEntry(int id)
         {
-            // костыль: сделай проверку входных данных, при невалидном id бд ничего не выдаёт
+            // NB: костыль, сделай проверку входных данных, при невалидном id бд ничего не выдаёт
             if (id == 0)
             {
                 id = 1;
             }
+
             using var repo = _serviceScope.ServiceProvider.GetRequiredService<IRepository>();
             var result = repo.GetEntry(id);
             return result;
@@ -41,7 +42,7 @@ namespace TodoList.Models
 
         public List<EntryEntity> GetEntries(int currentPage, int filter, out int correctedPage)
         {
-            // фильтр через DI в таком виде работает некорректно
+            // NB: фильтр через DI в таком виде работает некорректно
             Filters filters = new();
             if (filter != NoFilter)
             {
@@ -81,7 +82,7 @@ namespace TodoList.Models
 
         public EntryEntity CreateEntry(EntryDto dto)
         {
-            if (dto.Initiator == null || dto.Executor == null || dto.TaskStatus == null) 
+            if (dto.Initiator == null || dto.Executor == null || dto.TaskStatus == null)
             {
                 return EntryDto.ConvertFromDto(EntryDto.Error("[Create: Undefined dto, please reload your browser page]")[0]);
             }
@@ -114,9 +115,8 @@ namespace TodoList.Models
                 return EntryDto.ConvertFromDto(EntryDto.Error("[Update: Undefined dto, please reload your browser page]")[0]);
             }
 
-            // TODO: ты обновляешь все связанные таблицы (dbo.ProblemStatus)
-            // потому приходится вставлять в них new сущности (стр.99) и менять в них поля
-            // TODO: обновляй только то, что необходимо (dbo.Entries)
+            // TODO: ты обновляешь все связанные таблицы (dbo.ProblemStatus, dbo.Users=>dbo.UserStatus)
+            // TODO: найди вариант обновлять только то, что необходимо (dbo.Entries), если он существует
             using var repo = _serviceScope.ServiceProvider.GetRequiredService<IRepository>();
 
             ProblemStatusEntity taskStatus = repo.GetProblemStatus((ProblemStatus)dto.TaskStatus.ProblemStatusId);

@@ -10,7 +10,7 @@ namespace TodoList.DataAccess
 
         public Filters()
         {
-            // правила фильтрации по умолчанию
+            // NB: правила фильтрации по умолчанию
             _predicate = (e) => { return true; };
             _keySelector = (e) => { return e.EntryId; };
         }

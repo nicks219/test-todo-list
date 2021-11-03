@@ -1,9 +1,9 @@
 ﻿namespace TodoList.BuisnesProcess
 {
-    /// Имя TaskStatus конфликтует с Threading
+    // NB: Имя TaskStatus конфликтует с Threading
     public enum ProblemStatus
     {
-        // id в sql идут от 1, enum идут от 0
+        // NB: id в sql идут от 1, enum идут от 0
         New = 1,
         InProgress = 2,
         Complited = 3,

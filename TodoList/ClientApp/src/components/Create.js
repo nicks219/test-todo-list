@@ -2,7 +2,7 @@
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-// TODO: учись писать функциональные компоненты на хуках, вот пример моего календаря:
+// TODO: учись писать функциональные компоненты на хуках, вот пример того же календаря
 const Example = () => {
     const [startDate, setStartDate] = useState(new Date());
     return (
@@ -26,7 +26,7 @@ export class Create extends Component {
     constructor(props) {
         super(props);
         this.state = { backlog: [], problemStatuses: [], users: [], date: new Date(), loading: true };
-        // костыль: при "обновлении" будет загружена первая запись, но хотя бы не "отвалится"
+        // NB: костыль, при "обновлении" будет загружена первая запись, но хотя бы не "отвалится"
         if (props.location.fromReadComponent != undefined) {
             this.id = props.location.propsState;
             this.page = props.location.fromReadComponent;
@@ -173,8 +173,6 @@ export class Create extends Component {
         );
     }
 
-    // TODO: перед setState проверяй, смонтирован ли компонент !!!!!
-
     async getEntriesData() {
         const response = await fetch('entry/ongetentry?id=' + this.id);
         const data = await response.json();
@@ -183,7 +181,7 @@ export class Create extends Component {
         data.initiator = this.state.users[0];
         data.executor = this.state.users[0];
         data.taskStatus = this.state.problemStatuses[0];
-        // ISO конвертится на стороне .NET
+        // NB: ISO конвертится на стороне .NET
         data.startDate = this.state.date.toISOString();
         data.deadline = this.state.date.toISOString();
 
@@ -201,7 +199,7 @@ export class Create extends Component {
         }
          const data = await response.json();
 
-        // если Create не удался, но больше похоже на костыль
+        // NB: если Create не удался, но больше похоже на костыль
         if (data.initiator === null) {
             console.log("CREATE ABORTED");
             const data2 = this.state.backlog;

@@ -24,11 +24,11 @@ namespace RandomSongSearchEngine.Controllers
             _scope = serviceScopeFactory;
         }
 
-        // при ошибке (запрос с Create контроллера [Authorize]) вернёт
+        // NB: при ошибке (запрос с Create контроллера [Authorize]) вернёт
         // https://localhost:5001/Account/Login/?ReturnUrl=%2Fentry%2Fonpostcreate
         // redirected: true
         //
-        // при успехе (запрос с Create контроллера [Authorize])вернет
+        // NB: при успехе (запрос с Create контроллера [Authorize])вернет
         // https://localhost:5001/entry/onpostcreate
         // redirected: false
         [HttpGet]
@@ -36,7 +36,8 @@ namespace RandomSongSearchEngine.Controllers
         {
             var loginModel = new LoginDto(userName);
             var response = await Login(loginModel);
-            return response == "[Ok]" ? "[LoginController: Login Ok]" : "[LoginController: Error]";//(ActionResult<string>)BadRequest(response);
+            return response == "[Ok]" ? "[LoginController: Login Ok]" : "[LoginController: Error]";
+            //(ActionResult<string>)BadRequest(response);
         }
 
         [HttpPost]

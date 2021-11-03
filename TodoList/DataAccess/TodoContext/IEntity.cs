@@ -1,6 +1,6 @@
 ﻿namespace TodoList.DataAccess.TodoContext
 {
-    /// Marker
+    // NB: Marker
     public interface IEntity
     {
     }
