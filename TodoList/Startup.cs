@@ -10,12 +10,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
-using System;
-using System.IO;
 using TodoList.BuisnesProcess;
 using TodoList.DataAccess;
 using TodoList.DataAccess.DTO;
-using TodoList.Logger;
 
 namespace TodoList
 {
@@ -28,7 +25,6 @@ namespace TodoList
 
         public IConfiguration Configuration { get; }
 
-        // NB: this method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IValidator, Validator>();
@@ -48,7 +44,6 @@ namespace TodoList
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
-                    // NB: путь авторизации для [Authorize] контроллеров
                     options.LoginPath = new PathString("/Account/Login/");
                 });
 
@@ -59,7 +54,6 @@ namespace TodoList
             });
         }
 
-        // NB: this method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
@@ -71,7 +65,6 @@ namespace TodoList
             else
             {
                 app.UseExceptionHandler("/Error");
-                // NB: the default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
@@ -103,6 +96,7 @@ namespace TodoList
                 }
             });
 
+            // NB: на данный момент используется глобальный логгер Serilog
             //loggerFactory.AddFile(Path.Combine(Directory.GetCurrentDirectory(), "logger.txt"));
             //var logger = loggerFactory.CreateLogger(typeof(FileLogger));
             //logger.LogInformation("App started at {0}, is 64-bit process: {1}", DateTime.Now, Environment.Is64BitProcess);
