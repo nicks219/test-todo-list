@@ -17,4 +17,4 @@
 + SeedDB добавит "шаблонную задачу" в бд (аутентификация не требуется)      
 + Create требует аутентификации, зайдите в Login (и нажмите Login еа самой странице)     
 # .NET Core 5.0 = React = Bootstrap = MSSql   
-NuGet: EFCore, Swagger    
+NuGet: EFCore, Swagger, Serilog    
