@@ -1,11 +1,11 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using DataAccess.TodoContext;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using TodoList.DataAccess;
-using TodoList.DataAccess.TodoContext;
 using TodoList.Dto;
 
 namespace TodoList.Models

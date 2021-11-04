@@ -1,7 +1,7 @@
-﻿using System;
+﻿using DataAccess.TodoContext;
+using System;
 using System.Linq;
 using TodoList.BuisnesProcess;
-using TodoList.DataAccess.TodoContext;
 using TodoList.Dto;
 
 namespace TodoList.DataAccess

@@ -1,5 +1,5 @@
-﻿using System;
-using TodoList.DataAccess.TodoContext;
+﻿using DataAccess.TodoContext;
+using System;
 
 namespace TodoList.DataAccess
 {

@@ -1,4 +1,4 @@
-﻿namespace TodoList.DataAccess.TodoContext
+﻿namespace DataAccess.TodoContext
 {
     public class ProblemStatusEntity : IEntity
     {

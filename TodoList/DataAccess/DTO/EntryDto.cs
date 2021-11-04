@@ -1,8 +1,8 @@
-﻿using System;
+﻿using DataAccess.TodoContext;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
-using TodoList.DataAccess.TodoContext;
 
 namespace TodoList.DataAccess.DTO
 {

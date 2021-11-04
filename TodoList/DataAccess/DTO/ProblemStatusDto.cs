@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using DataAccess.TodoContext;
+using System.Collections.Generic;
 using System.Linq;
-using TodoList.DataAccess.TodoContext;
 
 namespace TodoList.DataAccess.DTO
 {

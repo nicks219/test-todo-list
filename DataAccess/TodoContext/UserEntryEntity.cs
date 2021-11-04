@@ -1,4 +1,4 @@
-﻿namespace TodoList.DataAccess.TodoContext
+﻿namespace DataAccess.TodoContext
 {
     // NB: Many-to-many на данный момент не нужно, но понадобится в дальнейшем
     //public class UserEntryEntity

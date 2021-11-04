@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TodoList.DataAccess.TodoContext
+namespace DataAccess.TodoContext
 {
     public class EntryEntity : IEntity
     {

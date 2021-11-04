@@ -1,6 +1,6 @@
-﻿using System;
+﻿using DataAccess.TodoContext;
+using System;
 using TodoList.BuisnesProcess;
-using TodoList.DataAccess.TodoContext;
 
 namespace TodoList.DataAccess.DTO
 {

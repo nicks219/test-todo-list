@@ -1,3 +1,4 @@
+using DataAccess.TodoContext;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -14,7 +15,6 @@ using System.IO;
 using TodoList.BuisnesProcess;
 using TodoList.DataAccess;
 using TodoList.DataAccess.DTO;
-using TodoList.DataAccess.TodoContext;
 using TodoList.Logger;
 
 namespace TodoList
@@ -103,9 +103,9 @@ namespace TodoList
                 }
             });
 
-            loggerFactory.AddFile(Path.Combine(Directory.GetCurrentDirectory(), "logger.txt"));
-            var logger = loggerFactory.CreateLogger(typeof(FileLogger));
-            logger.LogInformation("App started at {0}, is 64-bit process: {1}", DateTime.Now, Environment.Is64BitProcess);
+            //loggerFactory.AddFile(Path.Combine(Directory.GetCurrentDirectory(), "logger.txt"));
+            //var logger = loggerFactory.CreateLogger(typeof(FileLogger));
+            //logger.LogInformation("App started at {0}, is 64-bit process: {1}", DateTime.Now, Environment.Is64BitProcess);
 
             var serviceScopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
             using var serviceScope = serviceScopeFactory.CreateScope();

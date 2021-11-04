@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using TodoList.DataAccess.TodoContext;
+﻿using DataAccess.TodoContext;
+using System.Collections.Generic;
 
 namespace TodoList.BuisnesProcess
 {

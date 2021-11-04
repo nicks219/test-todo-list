@@ -1,23 +1,23 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DataAccess.TodoContext;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using TodoList.BuisnesProcess;
-using TodoList.DataAccess.TodoContext;
 using TodoList.Dto;
 
 namespace TodoList.DataAccess
 {
     public class SqlRepository : IRepository
     {
-        private readonly TodoContext.TodoContext _context;
+        private readonly TodoContext _context;
         private Func<EntryEntity, bool> _predicate;
         private Func<EntryEntity, int> _keySelector;
 
         public SqlRepository(IServiceProvider serviceProvider)
         {
-            _context = serviceProvider.GetRequiredService<TodoContext.TodoContext>();
+            _context = serviceProvider.GetRequiredService<TodoContext>();
         }
 
         public EntryEntity GetEntry(int id)
