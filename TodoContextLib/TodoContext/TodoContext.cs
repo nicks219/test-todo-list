@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace DataAccess.TodoContext
+namespace TodoContextLib.TodoContext
 {
     public class TodoContext : DbContext
     {

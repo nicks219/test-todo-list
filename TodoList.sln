@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31729.503
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TodoList", "TodoList\TodoList.csproj", "{0D74473F-C50A-4AF3-8519-762E7745FAC3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "DataAccess\DataAccess.csproj", "{AD3D0B3B-06EF-409C-AF74-C1FBB8261B4B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TodoContextLib", "TodoContextLib\TodoContextLib.csproj", "{AD3D0B3B-06EF-409C-AF74-C1FBB8261B4B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

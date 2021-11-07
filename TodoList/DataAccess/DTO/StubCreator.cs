@@ -1,5 +1,5 @@
-﻿using DataAccess.TodoContext;
-using System;
+﻿using System;
+using TodoContextLib.TodoContext;
 using TodoList.BuisnesProcess;
 
 namespace TodoList.DataAccess.DTO

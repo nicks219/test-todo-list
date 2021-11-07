@@ -1,4 +1,4 @@
-﻿namespace DataAccess.TodoContext
+﻿namespace TodoContextLib.TodoContext
 {
     // NB: Marker
     public interface IEntity

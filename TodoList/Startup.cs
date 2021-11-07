@@ -1,4 +1,3 @@
-using DataAccess.TodoContext;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
+using TodoContextLib.TodoContext;
 using TodoList.BuisnesProcess;
 using TodoList.DataAccess;
 using TodoList.DataAccess.DTO;
