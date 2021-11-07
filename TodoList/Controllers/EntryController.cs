@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -16,13 +15,13 @@ namespace TodoList.Controllers
     {
         private readonly ILogger<EntryController> _logger;
         private readonly IServiceScopeFactory _serviceScopeFactory;
-        private readonly IValidator _rules;
+        private readonly IValidator _validator;
 
-        public EntryController(ILogger<EntryController> logger, IServiceScopeFactory serviceScopeFactory, IValidator rules)
+        public EntryController(ILogger<EntryController> logger, IServiceScopeFactory serviceScopeFactory, IValidator validator)
         {
             _logger = logger;
             _serviceScopeFactory = serviceScopeFactory;
-            _rules = rules;
+            _validator = validator;
         }
 
         [HttpGet("[action]")]
@@ -106,14 +105,20 @@ namespace TodoList.Controllers
             }
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpPost("[action]")]
         public ActionResult<EntryDto> OnPostCreate([FromBody] EntryDto dto)
         {
+            //var isAuthenticated = _validator.IsAuthenticated(HttpContext);
+            if (!_validator.IsInRole(HttpContext, "Initiator"))
+            {
+                return EntryDto.Error("[EntryController: Login please]")[0];
+            }
+
             try
             {
                 using var scope = _serviceScopeFactory.CreateScope();
-                var result = new EntityModel(scope, _rules).CreateEntry(dto);
+                var result = new EntityModel(scope, _validator).CreateEntry(dto);
                 return EntryDto.ConvertToDto(result);
             }
             catch (Exception ex)
@@ -129,7 +134,7 @@ namespace TodoList.Controllers
             try
             {
                 using var scope = _serviceScopeFactory.CreateScope();
-                var result = new EntityModel(scope, _rules).UpdateEntry(dto);
+                var result = new EntityModel(scope, _validator).UpdateEntry(dto);
                 return EntryDto.ConvertToDto(result);
             }
             catch (Exception ex)

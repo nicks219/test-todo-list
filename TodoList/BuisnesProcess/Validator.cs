@@ -1,4 +1,5 @@
 ﻿using DataAccess.TodoContext;
+using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 
 namespace TodoList.BuisnesProcess
@@ -37,5 +38,16 @@ namespace TodoList.BuisnesProcess
 
             return true;
         }
+
+        public bool IsInRole (HttpContext httpContext, string role)
+        {
+            return httpContext.User.IsInRole(role);
+        }
+
+        public bool IsAuthenticated(HttpContext httpContext)
+        {
+            return httpContext.User.Identity.IsAuthenticated;
+        }
+
     }
 }

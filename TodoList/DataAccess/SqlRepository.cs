@@ -71,7 +71,9 @@ namespace TodoList.DataAccess
 
         public UserEntity GetUser(LoginDto login)
         {
-            return _context.Users
+            return _context
+                .Users
+                .Include(u => u.UserStatus)
                 .FirstOrDefault(u => u.Name == login.UserName);
         }
 

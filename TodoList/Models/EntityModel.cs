@@ -15,16 +15,16 @@ namespace TodoList.Models
         private const int MinPage = 0;
         private const int NoFilter = 6;
         private readonly IServiceScope _serviceScope;
-        private readonly IValidator _rules;
+        private readonly IValidator _validator;
 
         public EntityModel(IServiceScope serviceScope)
         {
             _serviceScope = serviceScope;
         }
 
-        public EntityModel(IServiceScope serviceScope, IValidator rules) : this(serviceScope)
+        public EntityModel(IServiceScope serviceScope, IValidator validator) : this(serviceScope)
         {
-            this._rules = rules;
+            _validator = validator;
         }
 
         public EntryEntity GetEntry(int id)
@@ -97,7 +97,7 @@ namespace TodoList.Models
 
             EntryEntity model = EntryDto.ConvertFromDto(dto);
 
-            if (_rules != null && _rules.IsModelValid(model))
+            if (_validator != null && _validator.IsModelValid(model))
             {
                 model.EntryId = 0;
                 repo.Create(model);
@@ -128,7 +128,7 @@ namespace TodoList.Models
 
             EntryEntity model = EntryDto.ConvertFromDto(dto);
 
-            if (_rules != null && _rules.IsModelValid(model))
+            if (_validator != null && _validator.IsModelValid(model))
             {
                 repo.Update(model);
                 var result = repo.GetEntry(model.EntryId);

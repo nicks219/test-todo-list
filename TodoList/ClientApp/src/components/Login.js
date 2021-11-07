@@ -23,8 +23,7 @@ export class Login extends Component {
 
     async login() {
         let userName = document.getElementById("name").value;
-        // NB: ЗАГЛУШКА
-        userName = "Slame";
+        // userName = "Slame";
         await fetch('login/login?userName=' + String(userName))
             .then(response => response.ok ? console.log("Login completed") : console.log("Login error"));
     }
@@ -49,7 +48,7 @@ export class Login extends Component {
                 </span>
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 <span>
-                    <input type="text" id="name" />
+                    <input type="text" id="name" placeholder="enter John"/>
                 </span>
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 <span>

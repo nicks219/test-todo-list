@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using TodoList.DataAccess;
 using TodoList.Dto;
@@ -21,7 +22,7 @@ namespace TodoList.Models
             _logger = _scope.ServiceProvider.GetRequiredService<ILogger<LoginModel>>();
         }
 
-        public async Task<ClaimsIdentity> TryLogin(LoginDto login)
+        public async Task<GenericPrincipal> TryLogin(LoginDto login)
         {
             try
             {
@@ -38,8 +39,10 @@ namespace TodoList.Models
                 }
 
                 var claims = new List<Claim> { new Claim(ClaimsIdentity.DefaultNameClaimType, login.UserName) };
-                ClaimsIdentity id = new(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
-                return id;
+                ClaimsIdentity claimsIdentity = new(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
+                GenericPrincipal genericPrincipal = new(claimsIdentity, new[] { user.UserStatus.UserStatusName } );
+
+                return genericPrincipal;
             }
             catch (Exception ex)
             {

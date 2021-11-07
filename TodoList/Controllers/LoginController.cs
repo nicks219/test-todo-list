@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Security.Claims;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using TodoList.Dto;
 using TodoList.Models;
@@ -53,12 +53,14 @@ namespace TodoList.Controllers
             using var scope = _scope.CreateScope();
             try
             {
-                ClaimsIdentity id = await new LoginModel(scope).TryLogin(model);
-                if (id != null)
+                GenericPrincipal genericPrincipal = await new LoginModel(scope).TryLogin(model);
+                if (genericPrincipal != null)
                 {
-                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, genericPrincipal);
+
                     return "[Ok]";
                 }
+
                 return "[LoginController: Data Error]";
             }
             catch (Exception ex)

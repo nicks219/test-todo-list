@@ -68,6 +68,11 @@ namespace TodoList.DataAccess.DTO
                     Name = "Slame",
                     UserStatus = repo.GetUserStatus(UserStatus.Executor)
                 });
+                repo.Create(new UserEntity()
+                {
+                    Name = "Andrew",
+                    UserStatus = repo.GetUserStatus(UserStatus.Admin)
+                });
             }
         }
     }
